@@ -1,9 +1,8 @@
-package com.app.model;
+package com.app.model.agency;
 
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
 
 @Data
 @Builder
@@ -12,5 +11,4 @@ public class TravelAgency {
     final String name;
     final String city;
     final String phoneNumber;
-    final List<Tour> tours;
 }

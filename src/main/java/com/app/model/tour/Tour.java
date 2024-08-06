@@ -1,4 +1,4 @@
-package com.app.model;
+package com.app.model.tour;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

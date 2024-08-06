@@ -1,12 +1,12 @@
 package com.app.persistence.converter.impl;
 
-import com.app.model.country.Countries;
+import com.app.model.tour.Tours;
 import com.app.persistence.converter.JsonConverter;
 import com.app.persistence.converter.generic.AbstractGsonConverter;
 import com.google.gson.Gson;
 
-public class CountriesGsonConverter extends AbstractGsonConverter<Countries> implements JsonConverter<Countries> {
-    public CountriesGsonConverter(Gson gson) {
+public class ToursGsonConverter extends AbstractGsonConverter<Tours> implements JsonConverter<Tours> {
+    public ToursGsonConverter(Gson gson) {
         super(gson);
     }
 }

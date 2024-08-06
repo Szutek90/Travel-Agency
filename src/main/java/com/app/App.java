@@ -7,6 +7,7 @@ import com.app.persistence.converter.impl.TravelAgenciesGsonConverter;
 import com.app.persistence.deserializer.custom.LocalDateDeserializer;
 import com.app.persistence.deserializer.impl.CountriesDeserializer;
 import com.app.persistence.deserializer.impl.TravelAgenciesDeserializer;
+import com.app.repository.impl.TravelAgencyRepositoryImpl;
 import com.google.gson.GsonBuilder;
 import org.jdbi.v3.core.Jdbi;
 
@@ -27,15 +28,17 @@ public class App {
         var countriesGsonConverter = new CountriesGsonConverter(gson);
         var countriesDeserializer = new CountriesDeserializer(countriesGsonConverter);
         var travelAgenciesDeserializer = new TravelAgenciesDeserializer(travelAgenciesGsonConverter);
-        var travelAgencies = travelAgenciesDeserializer.deserialize("agenciesWithTours.json");
+        var travelAgencies = travelAgenciesDeserializer.deserialize("agencies.json");
         var countries = countriesDeserializer.deserialize("countries.json");
+        var travelAgencyRepo = new TravelAgencyRepositoryImpl();
+        travelAgencyRepo.save(travelAgencies.travelAgencies().getFirst());
 
-        var createCountryTableSql = """
-                create table if not exists country (
-                id int primary key auto_increment,
-                name varchar(255) not null)
-                """;
-        jdbi.useHandle(handle ->
-                handle.execute(createCountryTableSql));
+//        var createCountryTableSql = """
+//                create table if not exists country (
+//                id int primary key auto_increment,
+//                name varchar(255) not null)
+//                """;
+//        jdbi.useHandle(handle ->
+//                handle.execute(createCountryTableSql));
     }
 }

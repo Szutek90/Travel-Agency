@@ -1,6 +1,6 @@
 package com.app.persistence.converter.impl;
 
-import com.app.model.TravelAgencies;
+import com.app.model.agency.TravelAgencies;
 import com.app.persistence.converter.JsonConverter;
 import com.app.persistence.converter.generic.AbstractGsonConverter;
 import com.google.gson.Gson;

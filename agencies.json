@@ -1,0 +1,22 @@
+{
+  "travelAgencies": [
+    {
+      "id": 1,
+      "name": "Sunshine Travels",
+      "city": "Warszawa",
+      "phoneNumber": "+48 123 456 789"
+    },
+    {
+      "id": 2,
+      "name": "Adventure Seekers",
+      "city": "Kraków",
+      "phoneNumber": "+48 987 654 321"
+    },
+    {
+      "id": 3,
+      "name": "Relaxation Retreats",
+      "city": "Gdańsk",
+      "phoneNumber": "+48 564 738 290"
+    }
+  ]
+}
