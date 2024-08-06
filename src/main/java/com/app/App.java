@@ -2,8 +2,10 @@ package com.app;
 
 import com.app.config.DatabaseConfig;
 import com.app.config.DatabaseConfigMapper;
-import com.app.persistence.converter.impl.GsonConverter;
+import com.app.persistence.converter.impl.CountriesGsonConverter;
+import com.app.persistence.converter.impl.TravelAgenciesGsonConverter;
 import com.app.persistence.deserializer.custom.LocalDateDeserializer;
+import com.app.persistence.deserializer.impl.CountriesDeserializer;
 import com.app.persistence.deserializer.impl.TravelAgenciesDeserializer;
 import com.google.gson.GsonBuilder;
 import org.jdbi.v3.core.Jdbi;
@@ -21,9 +23,12 @@ public class App {
                 .setPrettyPrinting()
                 .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
                 .create();
-        var converter = new GsonConverter(gson);
-        var deserializer = new TravelAgenciesDeserializer(converter);
-        var travelAgencies = deserializer.deserialize("agenciesWithTours.json");
+        var travelAgenciesGsonConverter = new TravelAgenciesGsonConverter(gson);
+        var countriesGsonConverter = new CountriesGsonConverter(gson);
+        var countriesDeserializer = new CountriesDeserializer(countriesGsonConverter);
+        var travelAgenciesDeserializer = new TravelAgenciesDeserializer(travelAgenciesGsonConverter);
+        var travelAgencies = travelAgenciesDeserializer.deserialize("agenciesWithTours.json");
+        var countries = countriesDeserializer.deserialize("countries.json");
 
         var createCountryTableSql = """
                 create table if not exists country (

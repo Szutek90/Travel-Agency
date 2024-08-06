@@ -1,6 +1,5 @@
-package com.app.persistence.converter.impl;
+package com.app.persistence.converter.generic;
 
-import com.app.model.TravelAgencies;
 import com.app.persistence.converter.JsonConverter;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -8,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 import java.io.FileReader;
 
 @RequiredArgsConstructor
-public class GsonConverter implements JsonConverter<TravelAgencies> {
+public class AbstractGsonConverter<T> implements JsonConverter<T> {
     private final Gson gson;
 
     @Override
-    public TravelAgencies fromJson(FileReader fileReader, Class<TravelAgencies> type) {
+    public T fromJson(FileReader fileReader, Class<T> type) {
         return gson.fromJson(fileReader, type);
     }
 }
