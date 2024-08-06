@@ -1,0 +1,70 @@
+{
+  "travelAgencies": [
+    {
+      "id": 1,
+      "name": "Sunshine Travels",
+      "city": "Warszawa",
+      "phone": "+48 123 456 789",
+      "tours": [
+        {
+          "tourId": 1,
+          "countryId": 1,
+          "pricePerPerson": 2500,
+          "startDate": "2024-09-01",
+          "endDate": "2024-09-10"
+        },
+        {
+          "tourId": 2,
+          "countryId": 2,
+          "pricePerPerson": 3000,
+          "startDate": "2024-10-05",
+          "endDate": "2024-10-15"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Adventure Seekers",
+      "city": "Kraków",
+      "phone": "+48 987 654 321",
+      "tours": [
+        {
+          "tourId": 3,
+          "countryId": 3,
+          "pricePerPerson": 2000,
+          "startDate": "2024-08-15",
+          "endDate": "2024-08-25"
+        },
+        {
+          "tourId": 4,
+          "countryId": 4,
+          "pricePerPerson": 3500,
+          "startDate": "2024-11-01",
+          "endDate": "2024-11-10"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Relaxation Retreats",
+      "city": "Gdańsk",
+      "phone": "+48 564 738 290",
+      "tours": [
+        {
+          "tourId": 5,
+          "countryId": 5,
+          "pricePerPerson": 1500,
+          "startDate": "2024-07-10",
+          "endDate": "2024-07-20"
+        },
+        {
+          "tourId": 6,
+          "countryId": 2,
+          "pricePerPerson": 4000,
+          "startDate": "2024-12-20",
+          "endDate": "2025-01-05"
+        }
+      ]
+    }
+  ]
+}
