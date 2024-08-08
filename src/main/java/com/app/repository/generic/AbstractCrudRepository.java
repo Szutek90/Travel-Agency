@@ -16,8 +16,8 @@ import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T, ID> {
-    private final Jdbi jdbi;
-    private final Class<T> type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
+    protected final Jdbi jdbi;
+    protected final Class<T> type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
             .getActualTypeArguments()[0];
 
     @Override
@@ -141,7 +141,7 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, s);
     }
 
-    private String tableName() {
+    protected String tableName() {
         return English.plural(toLowerUnderscore(type.getSimpleName()));
     }
 

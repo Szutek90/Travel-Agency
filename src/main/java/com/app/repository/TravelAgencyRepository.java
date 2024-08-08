@@ -3,8 +3,8 @@ package com.app.repository;
 import com.app.model.agency.TravelAgency;
 import com.app.repository.generic.CrudRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface TravelAgencyRepository extends CrudRepository<TravelAgency, Integer> {
-    Optional<TravelAgency> getByCity(String city);
+    List<TravelAgency> getByCity(String city);
 }

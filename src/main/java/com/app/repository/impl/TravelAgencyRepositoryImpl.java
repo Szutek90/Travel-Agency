@@ -5,7 +5,7 @@ import com.app.repository.TravelAgencyRepository;
 import com.app.repository.generic.AbstractCrudRepository;
 import org.jdbi.v3.core.Jdbi;
 
-import java.util.Optional;
+import java.util.List;
 
 public class TravelAgencyRepositoryImpl extends AbstractCrudRepository<TravelAgency, Integer>
         implements TravelAgencyRepository {
@@ -14,7 +14,12 @@ public class TravelAgencyRepositoryImpl extends AbstractCrudRepository<TravelAge
     }
 
     @Override
-    public Optional<TravelAgency> getByCity(String city) {
-        return Optional.empty();
+    public List<TravelAgency> getByCity(String city) {
+        var sql = "SELECT * FROM %s WHERE city = :city".formatted(tableName());
+        return jdbi.withHandle(handle -> handle
+                        .createQuery(sql)
+                        .bind("city", city)
+                        .mapToBean(type)
+                .list());
     }
 }

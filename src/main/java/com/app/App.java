@@ -35,8 +35,9 @@ public class App {
         var travelAgencyRepo = new TravelAgencyRepositoryImpl(jdbi);
        // System.out.println(travelAgencyRepo.saveAll(travelAgencies.travelAgencies()));
 //        System.out.println(travelAgencyRepo.findAllById(List.of(1,3,6)));
-        var agency1 = new TravelAgency(1, "TestUpdate", "Kotkowo", "brak");
-        travelAgencyRepo.update(agency1, 1);
+//        var agency1 = new TravelAgency(1, "TestUpdate", "Kotkowo", "brak");
+//        travelAgencyRepo.update(agency1, 1);
+        System.out.println(travelAgencyRepo.getByCity("Kotkowo"));
 
 //        var createAgencyTableSql = """
 //                create table if not exists agency (
