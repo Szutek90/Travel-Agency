@@ -13,9 +13,14 @@ public interface CrudRepository<T, ID> {
     Optional<T> findById(ID id);
 
     List<T> findLast(int n);
+
     List<T> findAll();
 
+    List<T> findAllById(List<ID> ids);
+
     List<T> deleteAllyByIds(List<ID> ids);
+
     List<T> deleteAll();
+
     T deleteById(ID id);
 }

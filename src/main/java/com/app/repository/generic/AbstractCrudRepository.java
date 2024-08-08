@@ -48,7 +48,16 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
 
     @Override
     public T update(T item, ID id) {
-        return null;
+        var sql = "update %s set %s where id = :id".formatted(tableName(), columnNamesAndValues(item));
+        var updatedRows = jdbi.withHandle(handle -> handle
+                .createUpdate(sql)
+                .bind("id", id)
+                .execute());
+
+        if (updatedRows == 0) {
+            throw new IllegalStateException("Row not updated");
+        }
+        return findById(id).orElseThrow();
     }
 
     @Override
@@ -64,12 +73,12 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
 
     @Override
     public List<T> findLast(int n) {
-        var sql = "select * from %s order by id desc limit %s".formatted(tableName(), n);
-        var x =  jdbi.withHandle(handle -> handle
+        var sql = "select * from %s order by id desc limit :n".formatted(tableName());
+        return jdbi.withHandle(handle -> handle
                 .createQuery(sql)
+                .bind("n", n)
                 .mapToBean(type)
                 .list());
-        return x;
     }
 
     @Override
@@ -82,31 +91,63 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
     }
 
     @Override
+    public List<T> findAllById(List<ID> ids) {
+        var sql = "select * from %s where id in (<ids>)".formatted(tableName());
+        var foundItems = jdbi.withHandle(handle -> handle
+                .createQuery(sql)
+                .bindList("ids", ids)
+                .mapToBean(type)
+                .list()
+        );
+
+        if (foundItems.size() != ids.size()) {
+            throw new IllegalStateException("Found " + foundItems.size() + " items but expected " + ids.size());
+        }
+        return foundItems;
+    }
+
+    @Override
     public List<T> deleteAllyByIds(List<ID> ids) {
-        return List.of();
+        var itemsToDelete = findAllById(ids);
+        var sql = "delete from %s where id in (<ids>)".formatted(tableName());
+        jdbi.useHandle(handle -> handle
+                .createUpdate(sql)
+                .bindList("ids", ids)
+                .execute());
+        return itemsToDelete;
     }
 
     @Override
     public List<T> deleteAll() {
-        return List.of();
+        var itemsToDelete = findAll();
+        var sql = "delete from %S".formatted(tableName());
+        jdbi.useHandle(handle -> handle.execute(sql));
+        return itemsToDelete;
     }
 
     @Override
     public T deleteById(ID id) {
-        return null;
+        var itemToDelete = findById(id).orElseThrow(() ->
+                new IllegalArgumentException("Item with that id not found"));
+        var sql = "delete from %s where id = :id".formatted(tableName());
+        jdbi.useHandle(handle -> handle
+                .createUpdate(sql)
+                .bind("id", id)
+                .execute());
+        return itemToDelete;
     }
 
-    private String toLowerCamelCase(String s) {
+    private String toLowerUnderscore(String s) {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, s);
     }
 
     private String tableName() {
-        return English.plural(toLowerCamelCase(type.getSimpleName()));
+        return English.plural(toLowerUnderscore(type.getSimpleName()));
     }
 
     private String getColumnNames() {
         var cols = getDeclaredFieldsWithoutId()
-                .map(field -> toLowerCamelCase(field.getName()))
+                .map(field -> toLowerUnderscore(field.getName()))
                 .collect(Collectors.joining(", "));
         return " ( %s ) ".formatted(cols);
     }
@@ -136,5 +177,23 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
     private Stream<Field> getDeclaredFieldsWithoutId() {
         return Arrays.stream(type.getDeclaredFields())
                 .filter(field -> !field.getName().equalsIgnoreCase("id"));
+    }
+
+    private String columnNamesAndValues(T item) {
+        return getDeclaredFieldsWithoutId()
+                .map(field -> {
+                    try {
+                        field.setAccessible(true);
+                        if (List.of(String.class,
+                                        Enum.class,
+                                        LocalDate.class)
+                                .contains(field.getType())) {
+                            return "%s = '%s'".formatted(toLowerUnderscore(field.getName()), field.get(item));
+                        }
+                        return toLowerUnderscore(field.getName()) + " = " + field.get(item).toString();
+                    } catch (Exception e) {
+                        throw new IllegalStateException(e);
+                    }
+                }).collect(Collectors.joining(", "));
     }
 }
