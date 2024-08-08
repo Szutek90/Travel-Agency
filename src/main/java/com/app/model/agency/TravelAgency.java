@@ -1,14 +1,12 @@
 package com.app.model.agency;
 
-import lombok.Builder;
-import lombok.Data;
-
+import lombok.*;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class TravelAgency {
-    final int id;
-    final String name;
-    final String city;
-    final String phoneNumber;
+    private int id;
+    private String name;
+    private String city;
+    private String phoneNumber;
 }

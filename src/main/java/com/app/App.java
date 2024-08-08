@@ -30,15 +30,17 @@ public class App {
         var travelAgenciesDeserializer = new TravelAgenciesDeserializer(travelAgenciesGsonConverter);
         var travelAgencies = travelAgenciesDeserializer.deserialize("agencies.json");
         var countries = countriesDeserializer.deserialize("countries.json");
-        var travelAgencyRepo = new TravelAgencyRepositoryImpl();
-        travelAgencyRepo.save(travelAgencies.travelAgencies().getFirst());
+        var travelAgencyRepo = new TravelAgencyRepositoryImpl(jdbi);
+        System.out.println(travelAgencyRepo.save(travelAgencies.travelAgencies()));
 
-//        var createCountryTableSql = """
-//                create table if not exists country (
+//        var createAgencyTableSql = """
+//                create table if not exists agency (
 //                id int primary key auto_increment,
-//                name varchar(255) not null)
+//                name varchar(255) not null).
+//                city varchar(255) not null,
+//                phone_number varchar(255) not null,
 //                """;
 //        jdbi.useHandle(handle ->
-//                handle.execute(createCountryTableSql));
+//                handle.execute(createAgencyTableSql));
     }
 }

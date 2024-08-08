@@ -1,7 +1,9 @@
 package com.app.repository.generic;
 
 import com.google.common.base.CaseFormat;
+import lombok.RequiredArgsConstructor;
 import org.atteo.evo.inflector.English;
+import org.jdbi.v3.core.Jdbi;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -12,7 +14,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@RequiredArgsConstructor
 public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T, ID> {
+    private final Jdbi jdbi;
     private final Class<T> type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
             .getActualTypeArguments()[0];
 
@@ -20,13 +24,26 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
     public T save(T item) {
         var sql = "insert into %s %s values %s"
                 .formatted(tableName(), getColumnNames(), getColumnValues(item));
-        System.out.println(sql);
-        return null;
+        var insertedRows = jdbi.withHandle(handle -> handle.execute(sql));
+        if (insertedRows == 0) {
+            throw new IllegalStateException("Row not inserted");
+        }
+        return findLast(1).getFirst();
     }
 
     @Override
     public List<T> saveAll(List<T> items) {
-        return List.of();
+        var sql = "insert into %s %s values %s".formatted(
+                tableName(),
+                getColumnNames(),
+                items.stream()
+                        .map(this::getColumnValues)
+                        .collect(Collectors.joining(", ")));
+        var inserterRows = jdbi.withHandle(handle -> handle.execute(sql));
+        if (inserterRows == 0) {
+            throw new IllegalStateException("Rows not inserted");
+        }
+        return findLast(inserterRows);
     }
 
     @Override
@@ -36,17 +53,32 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
 
     @Override
     public Optional<T> findById(ID id) {
-        return Optional.empty();
+        var sql = "select * from %s where id = :id".formatted(tableName());
+        return jdbi.withHandle(handle -> handle
+                .createQuery(sql)
+                .bind("id", id)
+                .mapToBean(type)
+                .findFirst());
+
     }
 
     @Override
     public List<T> findLast(int n) {
-        return List.of();
+        var sql = "select * from %s order by id desc limit %s".formatted(tableName(), n);
+        var x =  jdbi.withHandle(handle -> handle
+                .createQuery(sql)
+                .mapToBean(type)
+                .list());
+        return x;
     }
 
     @Override
     public List<T> findAll() {
-        return List.of();
+        var sql = "select * from %s order by id desc".formatted(tableName());
+        return jdbi.withHandle(handle -> handle
+                .createQuery(sql)
+                .mapToBean(type)
+                .list());
     }
 
     @Override
