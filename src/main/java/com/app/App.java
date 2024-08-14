@@ -32,12 +32,11 @@ public class App {
         var travelAgenciesDeserializer = new TravelAgenciesDeserializer(travelAgenciesGsonConverter);
         var travelAgencies = travelAgenciesDeserializer.deserialize("agencies.json");
         var countries = countriesDeserializer.deserialize("countries.json");
-        var travelAgencyRepo = new TravelAgencyRepositoryImpl(jdbi);
-       // System.out.println(travelAgencyRepo.saveAll(travelAgencies.travelAgencies()));
+        var travelAgencyRepo = new TravelAgencyRepositoryImpl(travelAgencies.travelAgencies());
+        // System.out.println(travelAgencyRepo.saveAll(travelAgencies.travelAgencies()));
 //        System.out.println(travelAgencyRepo.findAllById(List.of(1,3,6)));
 //        var agency1 = new TravelAgency(1, "TestUpdate", "Kotkowo", "brak");
 //        travelAgencyRepo.update(agency1, 1);
-        System.out.println(travelAgencyRepo.getByCity("Kotkowo"));
 
 //        var createAgencyTableSql = """
 //                create table if not exists agency (

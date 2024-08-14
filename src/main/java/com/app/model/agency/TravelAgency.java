@@ -2,11 +2,12 @@ package com.app.model.agency;
 
 import lombok.*;
 
-@Data
-@NoArgsConstructor
+@EqualsAndHashCode
+@ToString
+@AllArgsConstructor
 public class TravelAgency {
-    private int id;
-    private String name;
-    private String city;
-    private String phoneNumber;
+    final int id;
+    final String name;
+    final String city;
+    private final String phoneNumber;
 }
