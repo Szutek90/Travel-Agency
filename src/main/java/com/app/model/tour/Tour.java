@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Tour {
-    private int id;
+    protected int id;
     private int countryId;
     private BigDecimal pricePerPerson;
     private LocalDate startDate;

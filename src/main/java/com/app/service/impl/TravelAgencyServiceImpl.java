@@ -44,6 +44,6 @@ public class TravelAgencyServiceImpl implements TravelAgencyService {
     }
 
     private int getLastFreeId() {
-        return TravelAgencyMapper.toId.apply(travelAgencyRepository.getAll().getLast()) + 1;
+        return TravelAgencyMapper.toId.applyAsInt(travelAgencyRepository.getAll().getLast()) + 1;
     }
 }

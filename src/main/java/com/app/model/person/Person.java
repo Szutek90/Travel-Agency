@@ -6,7 +6,7 @@ import lombok.Data;
 @Builder
 @Data
 public class Person {
-    private int id;
+    protected int id;
     private String name;
     private String surname;
     private String email;

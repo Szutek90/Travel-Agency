@@ -1,8 +1,10 @@
 package com.app.dto;
 
 import com.app.model.Components;
+import com.app.model.person.Person;
+import com.app.model.tour.Tour;
 
 import java.util.List;
 
-public record ReservationDto(int customerId, int quantityOfPeople, int discount, List<Components> components) {
+public record ReservationDto(Person customer, Tour tour, int quantityOfPeople, int discount, List<Components> components) {
 }
