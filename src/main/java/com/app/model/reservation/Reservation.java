@@ -11,6 +11,7 @@ import java.util.List;
 public class Reservation {
     protected final int id;
     private final int tourId;
+    protected final int agencyId;
     private final int customerId;
     private final int quantityOfPeople;
     private final int discount;
