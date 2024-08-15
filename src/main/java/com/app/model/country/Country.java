@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Country {
-    private int id;
+    protected int id;
     private String name;
 }

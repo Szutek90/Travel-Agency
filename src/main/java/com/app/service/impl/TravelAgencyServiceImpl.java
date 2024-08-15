@@ -32,13 +32,15 @@ public class TravelAgencyServiceImpl implements TravelAgencyService {
     }
 
     @Override
-    public void addTravelAgency(TravelAgencyDto travelAgencyDto) {
+    public TravelAgency addTravelAgency(TravelAgencyDto travelAgencyDto) {
         if (travelAgencyRepository.findByName(travelAgencyDto.name()).isPresent()) {
             throw new IllegalArgumentException("There is already a Travel Agency with given name");
         }
-        travelAgencyRepository.save(
+        var agencyToSave =
                 new TravelAgency(getLastFreeId(), travelAgencyDto.name(), travelAgencyDto.city(),
-                        travelAgencyDto.phoneNumber()));
+                        travelAgencyDto.phoneNumber());
+        travelAgencyRepository.save(agencyToSave);
+        return agencyToSave;
     }
 
     private int getLastFreeId() {

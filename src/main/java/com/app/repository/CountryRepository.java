@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CountryRepository extends CrudRepository<Country, Integer> {
-    List<Country> findByCountry(String country);
+    Optional<Country> findByCountry(String country);
 }

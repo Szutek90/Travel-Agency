@@ -12,5 +12,5 @@ public interface TravelAgencyService {
 
     List<TravelAgency> getAllTravelAgenciesByCity(String city);
 
-    void addTravelAgency(TravelAgencyDto travelAgencyDto);
+    TravelAgency addTravelAgency(TravelAgencyDto travelAgencyDto);
 }

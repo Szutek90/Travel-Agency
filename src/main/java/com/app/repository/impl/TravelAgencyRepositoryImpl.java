@@ -18,7 +18,7 @@ public class TravelAgencyRepositoryImpl implements TravelAgencyRepository {
     @Override
     public Optional<TravelAgency> findById(int id) {
         return travelAgencies.stream()
-                .filter(t -> TravelAgencyMapper.toId.apply(t) == id)
+                .filter(t -> TravelAgencyMapper.toId.applyAsInt(t) == id)
                 .findFirst();
     }
 
@@ -50,7 +50,7 @@ public class TravelAgencyRepositoryImpl implements TravelAgencyRepository {
     public List<TravelAgency> saveAll(List<TravelAgency> travelAgencies) {
         var currentIds = generateIds(getAll());
         for (var agency : travelAgencies) {
-            if (currentIds.contains(TravelAgencyMapper.toId.apply(agency))) {
+            if (currentIds.contains(TravelAgencyMapper.toId.applyAsInt(agency))) {
                 throw new IllegalArgumentException("Duplicate id: " + agency);
             }
         }
@@ -68,7 +68,7 @@ public class TravelAgencyRepositoryImpl implements TravelAgencyRepository {
 
     private List<Integer> generateIds(List<TravelAgency> travelAgencies) {
         return travelAgencies.stream()
-                .map(TravelAgencyMapper.toId)
+                .map(TravelAgencyMapper.toId::applyAsInt)
                 .toList();
     }
 }
