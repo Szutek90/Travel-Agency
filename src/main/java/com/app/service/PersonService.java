@@ -1,22 +1,11 @@
 package com.app.service;
 
 import com.app.dto.PersonDto;
-import com.app.model.Person;
-import com.app.repository.PersonRepository;
-import lombok.AllArgsConstructor;
+import com.app.model.person.Person;
 
-@AllArgsConstructor
-public class PersonService {
-    private final PersonRepository personRepository;
-
-    public Person addPerson(PersonDto personDto) {
-        if (personRepository.findByEmail(personDto.email()).isPresent()) {
-            throw new IllegalArgumentException("Person with given email already exist");
-        }
-        return personRepository.save(Person.builder()
-                .name(personDto.name())
-                .surname(personDto.surname())
-                .email(personDto.email())
-                .build());
-    }
+public interface PersonService {
+    Person addPerson(PersonDto personDto);
+    void updateEmail(Person person, String email);
+    Person getPersonById(int id);
+    Person getPersonByNameAndSurname(String name, String surname);
 }

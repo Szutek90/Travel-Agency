@@ -1,6 +1,6 @@
 package com.app.repository.impl;
 
-import com.app.model.Person;
+import com.app.model.person.Person;
 import com.app.repository.PersonRepository;
 import com.app.repository.generic.AbstractCrudRepository;
 import org.jdbi.v3.core.Jdbi;
@@ -21,6 +21,18 @@ public class PersonRepositoryImpl extends AbstractCrudRepository<Person, Integer
                 .bind("surname", surname)
                 .mapToBean(type)
                 .list());
+    }
+
+    @Override
+    public Optional<Person> findByNameAndSurname(String name, String surname) {
+        var sql = "SELECT * FROM %s WHERE name = :name AND surname = :surname "
+                .formatted(tableName());
+        return jdbi.withHandle(handle -> handle
+                .createQuery(sql)
+                .bind("name", name)
+                .bind("surname", surname)
+                .mapToBean(type)
+                .findFirst());
     }
 
     @Override
