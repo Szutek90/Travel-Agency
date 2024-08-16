@@ -14,8 +14,8 @@ import java.time.LocalDate;
 @Builder
 public class Tour {
     protected int id;
-    private int countryId;
-    private BigDecimal pricePerPerson;
+    protected int countryId;
+    protected BigDecimal pricePerPerson;
     private LocalDate startDate;
     private LocalDate endDate;
 }
