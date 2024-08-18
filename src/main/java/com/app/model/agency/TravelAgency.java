@@ -6,7 +6,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 public class TravelAgency {
-    final int id;
+    final Integer id;
     final String name;
     final String city;
     private final String phoneNumber;

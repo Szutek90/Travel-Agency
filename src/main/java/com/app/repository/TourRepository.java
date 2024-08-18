@@ -18,4 +18,5 @@ public interface TourRepository extends CrudRepository<Tour, Integer> {
     List<Tour> getInDateRange(LocalDate from, LocalDate to);
     List<Tour> getBeforeGivenDate(LocalDate to);
     List<Tour> getAfterGivenDate(LocalDate from);
+    List<Tour> getByAgency(int agencyId);
 }

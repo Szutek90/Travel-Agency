@@ -1,29 +1,32 @@
 package com.app.service.impl;
 
 import com.app.dto.ReservationDto;
+import com.app.model.TourWithClosestAvgPriceByAgency;
 import com.app.model.agency.TravelAgency;
 import com.app.model.agency.TravelAgencyMapper;
 import com.app.model.country.Country;
+import com.app.model.country.CountryMapper;
 import com.app.model.reservation.Reservation;
 import com.app.model.person.PersonMapper;
 import com.app.model.reservation.ReservationMapper;
+import com.app.model.tour.Tour;
 import com.app.model.tour.TourMapper;
-import com.app.repository.impl.*;
+import com.app.repository.*;
 import com.app.service.ReservationWIthTourPersonAgencyService;
 import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
+import java.math.RoundingMode;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class ReservationWithTourPersonAgencyServiceImpl implements ReservationWIthTourPersonAgencyService {
-    private final ReservationRepositoryImpl reservationRepository;
-    private final TourRepositoryImpl tourRepository;
-    private final PersonRepositoryImpl personRepository;
-    private final TravelAgencyRepositoryImpl travelAgencyRepository;
-    private final CountryRepositoryImpl countryRepository;
+    private final ReservationRepository reservationRepository;
+    private final TourRepository tourRepository;
+    private final PersonRepository personRepository;
+    private final TravelAgencyRepository travelAgencyRepository;
+    private final CountryRepository countryRepository;
 
     @Override
     public void makeReservation(ReservationDto reservationDto) {
@@ -99,6 +102,35 @@ public class ReservationWithTourPersonAgencyServiceImpl implements ReservationWI
                 .max(Map.Entry.comparingByKey())
                 .map(Map.Entry::getValue)
                 .orElseThrow();
+    }
+
+    @Override
+    public Map<TravelAgency, TourWithClosestAvgPriceByAgency> getSummaryByTourAvgPrice() {
+        var averagePriceByAgency = tourRepository.findAll().stream()
+                .collect(Collectors.groupingBy(TourMapper.toAgencyId::applyAsInt,
+                        Collectors.mapping(TourMapper.toPrice, Collectors.toList())))
+                .entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        e -> e.getValue().stream()
+                                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                                .divide(new BigDecimal(e.getValue().size()), RoundingMode.HALF_UP)));
+        return averagePriceByAgency.entrySet().stream()
+                .collect(Collectors.toMap(e -> travelAgencyRepository.findById(e.getKey()).orElseThrow(), e -> {
+                    var closest = tourRepository.findAll().stream()
+                            .filter(t -> TourMapper.toAgencyId.applyAsInt(t) == e.getKey())
+                            .min(Comparator.comparing(t -> TourMapper.toPrice.apply(t).subtract(e.getValue()).abs()))
+                            .orElseThrow();
+                    return new TourWithClosestAvgPriceByAgency(e.getValue(), closest);
+                }));
+    }
+
+    @Override
+    public List<Tour> getToursTakingPlaceInGivenCountry(List<String> countryNames) {
+        var tours = new ArrayList<Tour>();
+        for (String countryName : countryNames) {
+            tours.addAll(tourRepository.getByCountryName(countryName));
+        }
+        return tours;
     }
 
 }

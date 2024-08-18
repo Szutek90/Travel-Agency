@@ -1,15 +1,14 @@
 package com.app.model.country;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 @Builder
 public class Country {
-    protected int id;
-    private String name;
+    protected Integer id;
+    protected String name;
 }

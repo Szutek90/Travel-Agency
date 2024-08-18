@@ -87,4 +87,14 @@ public class TourRepositoryImpl extends AbstractCrudRepository<Tour, Integer> im
                 .mapToBean(type)
                 .list());
     }
+
+    @Override
+    public List<Tour> getByAgency(int agencyId) {
+        var sql = "SELECT * from %s where agency_id = :agencyId".formatted(tableName());
+        return jdbi.withHandle(handle -> handle
+                .createQuery(sql)
+                .bind("agencyId", agencyId)
+                .mapToBean(type)
+                .list());
+    }
 }
