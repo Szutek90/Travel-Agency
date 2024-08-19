@@ -6,9 +6,11 @@ import com.app.model.agency.TravelAgencyMapper;
 import com.app.repository.TravelAgencyRepository;
 import com.app.service.TravelAgencyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class TravelAgencyServiceImpl implements TravelAgencyService {
     private final TravelAgencyRepository travelAgencyRepository;

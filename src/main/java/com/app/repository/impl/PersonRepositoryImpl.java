@@ -4,11 +4,14 @@ import com.app.model.person.Person;
 import com.app.repository.PersonRepository;
 import com.app.repository.generic.AbstractCrudRepository;
 import org.jdbi.v3.core.Jdbi;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class PersonRepositoryImpl extends AbstractCrudRepository<Person, Integer> implements PersonRepository {
+
     public PersonRepositoryImpl(Jdbi jdbi) {
         super(jdbi);
     }

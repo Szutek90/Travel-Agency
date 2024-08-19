@@ -7,11 +7,13 @@ import com.app.repository.CountryRepository;
 import com.app.repository.TourRepository;
 import com.app.service.TourWithCountryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class TourWithCountryServiceImpl implements TourWithCountryService {
     private final TourRepository tourRepository;

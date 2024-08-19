@@ -14,13 +14,16 @@ import com.app.model.tour.TourMapper;
 import com.app.repository.*;
 import com.app.service.ReservationWIthTourPersonAgencyService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class ReservationWithTourPersonAgencyServiceImpl implements ReservationWIthTourPersonAgencyService {
     private final ReservationRepository reservationRepository;
     private final TourRepository tourRepository;

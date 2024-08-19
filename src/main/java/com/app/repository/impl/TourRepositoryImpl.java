@@ -4,11 +4,13 @@ import com.app.model.tour.Tour;
 import com.app.repository.TourRepository;
 import com.app.repository.generic.AbstractCrudRepository;
 import org.jdbi.v3.core.Jdbi;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@Repository
 public class TourRepositoryImpl extends AbstractCrudRepository<Tour, Integer> implements TourRepository {
     public TourRepositoryImpl(Jdbi jdbi) {
         super(jdbi);

@@ -4,14 +4,16 @@ import com.app.dto.CountryDto;
 import com.app.model.country.Country;
 import com.app.repository.CountryRepository;
 import com.app.service.CountryService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class CountryServiceImpl implements CountryService {
     private final CountryRepository countryRepository;
 
     public Country addCountry(CountryDto countryDto) {
-        if (!countryRepository.findByCountry(countryDto.name()).isEmpty()) {
+        if (countryRepository.findByCountry(countryDto.name()).isPresent()) {
             throw new IllegalArgumentException("Country already exists");
         }
 

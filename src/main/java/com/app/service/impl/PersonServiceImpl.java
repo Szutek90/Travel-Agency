@@ -6,8 +6,11 @@ import com.app.model.person.PersonMapper;
 import com.app.repository.PersonRepository;
 import com.app.service.PersonService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
 

@@ -3,11 +3,13 @@ package com.app.repository.impl;
 import com.app.model.agency.TravelAgency;
 import com.app.model.agency.TravelAgencyMapper;
 import com.app.repository.TravelAgencyRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Repository
 public class TravelAgencyRepositoryImpl implements TravelAgencyRepository {
     private final List<TravelAgency> travelAgencies;
 
