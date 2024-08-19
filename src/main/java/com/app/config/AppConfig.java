@@ -1,5 +1,7 @@
 package com.app.config;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import org.jdbi.v3.core.Jdbi;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +26,11 @@ public class AppConfig {
         var password = env.getRequiredProperty("db.password");
 
         return Jdbi.create(url, user, password);
+    }
+
+    @Bean
+    public Gson gson() {
+        return new GsonBuilder().setPrettyPrinting().create();
     }
 
     @PostConstruct
