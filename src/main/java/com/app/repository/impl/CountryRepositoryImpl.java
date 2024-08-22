@@ -15,11 +15,11 @@ public class CountryRepositoryImpl extends AbstractCrudRepository<Country, Integ
     }
 
     @Override
-    public Optional<Country> findByCountry(String country) {
-        var sql = "SELECT * FROM %s WHERE country = :country".formatted(tableName());
+    public Optional<Country> findByCountry(String countryName) {
+        var sql = "SELECT * FROM %s WHERE name = :countryName".formatted(tableName());
         return jdbi.withHandle(handle -> handle
                 .createQuery(sql)
-                .bind("country", country)
+                .bind("countryName", countryName)
                 .mapToBean(type)
                 .findFirst());
     }

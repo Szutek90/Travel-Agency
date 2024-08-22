@@ -1,5 +1,9 @@
 package com.app.config;
 
+import com.app.persistence.converter.impl.CountriesGsonConverter;
+import com.app.persistence.deserializer.impl.CountriesDeserializer;
+import com.app.repository.impl.CountryRepositoryImpl;
+import com.app.repository.impl.TourRepositoryImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +40,14 @@ public class AppConfig {
     @PostConstruct
     private void postConstruct() {
         createTables();
+        replenishDb();
     }
 
     private void createTables() {
         var countrySql = """
                 CREATE TABLE IF NOT EXISTS countries (
                     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-                    name VARCHAR(255) NOT NULL
+                    name VARCHAR(255) UNIQUE NOT NULL
                 );
                 """;
 
@@ -98,4 +103,14 @@ public class AppConfig {
         });
     }
 
+    private void replenishDb() {
+        var countryRepo = new CountryRepositoryImpl(jdbi());
+        var toursRepo = new TourRepositoryImpl(jdbi());
+        if (countryRepo.findAll().isEmpty()) {
+            var countryConverter = new CountriesGsonConverter(gson());
+            var deserializer = new CountriesDeserializer(countryConverter);
+            countryRepo.saveAll(deserializer.deserialize("countries.json").countries());
+        }
+    }
+    // TODO dokonczyc
 }

@@ -7,6 +7,7 @@ import com.app.repository.CountryRepository;
 import com.app.repository.TourRepository;
 import com.app.service.TourWithCountryService;
 import lombok.RequiredArgsConstructor;
+import org.jdbi.v3.core.collector.ElementTypeNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,7 +23,7 @@ public class TourWithCountryServiceImpl implements TourWithCountryService {
     @Override
     public Tour getById(int id) {
         return tourRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("There is no Tour with given id"));
+                .orElseThrow(() -> new ElementTypeNotFoundException("There is no Tour with given id"));
     }
 
     @Override
