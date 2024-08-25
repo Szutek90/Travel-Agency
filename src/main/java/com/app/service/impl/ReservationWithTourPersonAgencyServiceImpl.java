@@ -13,7 +13,6 @@ import com.app.model.tour.Tour;
 import com.app.model.tour.TourMapper;
 import com.app.repository.*;
 import com.app.service.ReservationWIthTourPersonAgencyService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

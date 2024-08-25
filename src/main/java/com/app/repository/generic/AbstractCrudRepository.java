@@ -4,7 +4,6 @@ import com.google.common.base.CaseFormat;
 import lombok.RequiredArgsConstructor;
 import org.atteo.evo.inflector.English;
 import org.jdbi.v3.core.Jdbi;
-import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;

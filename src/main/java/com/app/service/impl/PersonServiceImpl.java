@@ -27,7 +27,13 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void updateEmail(Person person, String email) {
-        PersonMapper.updateEmail(person, email);
+            try {
+                var field = Person.class.getDeclaredField("email");
+                field.setAccessible(true);
+                field.set(person, email);
+            } catch (Exception e) {
+                throw new IllegalStateException(e.getMessage());
+            }
     }
 
     @Override
