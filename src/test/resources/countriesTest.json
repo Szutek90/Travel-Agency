@@ -1,0 +1,12 @@
+{
+  "countries": [
+    {
+      "id": 1,
+      "name": "Poland"
+    },
+    {
+      "id": 2,
+      "name": "Australia"
+    }
+  ]
+}

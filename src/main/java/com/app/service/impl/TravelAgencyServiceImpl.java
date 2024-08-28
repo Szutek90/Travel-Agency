@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -18,13 +19,15 @@ public class TravelAgencyServiceImpl implements TravelAgencyService {
     @Override
     public TravelAgency getTravelAgencyById(int id) {
         return travelAgencyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("There is no Person with given id"));
+                .orElseThrow(() ->
+                        new NoSuchElementException("There is no Travel Agency with given id"));
     }
 
     @Override
     public TravelAgency getTravelAgencyByName(String name) {
         return travelAgencyRepository.findByName(name)
-                .orElseThrow(() -> new IllegalArgumentException("There is no Person with given id"));
+                .orElseThrow(() ->
+                        new NoSuchElementException("There is no Travel Agency with given id"));
     }
 
     @Override

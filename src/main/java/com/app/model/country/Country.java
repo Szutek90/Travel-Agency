@@ -2,7 +2,6 @@ package com.app.model.country;
 
 import lombok.*;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
