@@ -1,18 +1,18 @@
 package com.app.service.impl;
 
-import com.app.dto.ReservationDto;
+import com.app.dto.reservation.GetReservationDto;
+import com.app.dto.reservation.CreateReservationDto;
 import com.app.model.TourWithClosestAvgPriceByAgency;
 import com.app.model.agency.TravelAgency;
 import com.app.model.agency.TravelAgencyMapper;
 import com.app.model.country.Country;
-import com.app.model.country.CountryMapper;
 import com.app.model.reservation.Reservation;
 import com.app.model.person.PersonMapper;
 import com.app.model.reservation.ReservationMapper;
 import com.app.model.tour.Tour;
 import com.app.model.tour.TourMapper;
 import com.app.repository.*;
-import com.app.service.ReservationWIthTourPersonAgencyService;
+import com.app.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,37 +23,60 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ReservationWithTourPersonAgencyServiceImpl implements ReservationWIthTourPersonAgencyService {
+public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final TourRepository tourRepository;
     private final PersonRepository personRepository;
     private final TravelAgencyRepository travelAgencyRepository;
     private final CountryRepository countryRepository;
+    private final ReservationComponentRepository componentRepository;
 
     @Override
-    public void makeReservation(ReservationDto reservationDto) {
-        if (tourRepository.findById(TourMapper.toId.applyAsInt(reservationDto.tour())).isEmpty()) {
+    public void makeReservation(CreateReservationDto createReservationDto) {
+        if (tourRepository.findById(TourMapper.toId.applyAsInt(createReservationDto.tour())).isEmpty()) {
             throw new IllegalStateException("tour not found");
         }
         if (personRepository
-                .findById(PersonMapper.toId.applyAsInt(reservationDto.customer())).isEmpty()) {
+                .findById(PersonMapper.toId.applyAsInt(createReservationDto.customer())).isEmpty()) {
             throw new IllegalStateException("person not found");
         }
-        reservationRepository.save(Reservation.builder()
-                .tourId(TourMapper.toId.applyAsInt(reservationDto.tour()))
-                .customerId(PersonMapper.toId.applyAsInt(reservationDto.customer()))
-                .agencyId(TravelAgencyMapper.toId.applyAsInt(reservationDto.travelAgency()))
-                .components(reservationDto.components())
-                .quantityOfPeople(reservationDto.quantityOfPeople())
-                .discount(reservationDto.discount())
+
+        var reservation = reservationRepository.save(Reservation.builder()
+                .tourId(TourMapper.toId.applyAsInt(createReservationDto.tour()))
+                .customerId(PersonMapper.toId.applyAsInt(createReservationDto.customer()))
+                .agencyId(TravelAgencyMapper.toId.applyAsInt(createReservationDto.travelAgency()))
+                .quantityOfPeople(createReservationDto.quantityOfPeople())
+                .discount(createReservationDto.discount())
                 .build());
+        var reservationId = ReservationMapper.toId.applyAsInt(reservation);
+        var components = createReservationDto.reservationComponents();
+        for(var component : components) {
+            componentRepository.save(reservationId, component);
+        }
     }
 
     @Override
-    public void deleteReservation(Reservation reservation) {
-        reservationRepository.deleteById(ReservationMapper.toId.applyAsInt(reservation));
+    public void deleteReservation(int id) {
+        reservationRepository.deleteById(id);
     }
 
+    @Override
+    public List<GetReservationDto> getAllReservations() {
+        var allReservations = reservationRepository.findAll();
+        return allReservations.stream().map(e ->
+                            new GetReservationDto(tourRepository.findById(ReservationMapper.toTourId.applyAsInt(e))
+                                    .orElseThrow(() -> new IllegalArgumentException("No tour with given id")),
+                                    travelAgencyRepository.findById(ReservationMapper.toAgencyId.applyAsInt(e))
+                                            .orElseThrow(() -> new IllegalArgumentException("No agency with given id")),
+                                    personRepository.findById(ReservationMapper.toPersonId.applyAsInt(e))
+                                            .orElseThrow(() -> new IllegalArgumentException("No person with given id")),
+                                    ReservationMapper.toQuantityOfPeople.applyAsInt(e),
+                                    ReservationMapper.toDiscount.applyAsInt(e),
+                                    componentRepository.findByReservationId(ReservationMapper.toId.applyAsInt(e)))
+                )
+                .toList();
+    }
+// TODO [ 6 ] Jakie ustawić routingi dla poniższych metod?
     @Override
     public List<TravelAgency> getAgencyWithMostOrganizedTrips() {
         return reservationRepository.findAll().stream()

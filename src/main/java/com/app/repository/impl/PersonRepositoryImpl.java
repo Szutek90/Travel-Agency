@@ -17,7 +17,7 @@ public class PersonRepositoryImpl extends AbstractCrudRepository<Person, Integer
     }
 
     @Override
-    public List<Person> finBySurname(String surname) {
+    public List<Person> findBySurname(String surname) {
         var sql = "SELECT * FROM %s WHERE surname = :surname".formatted(tableName());
         return jdbi.withHandle(handle -> handle
                 .createQuery(sql)

@@ -2,11 +2,14 @@ package com.app.service.impl;
 
 import com.app.dto.person.CreatePersonDto;
 import com.app.dto.person.GetPersonDto;
+import com.app.dto.person.UpdatePersonDto;
 import com.app.model.person.Person;
 import com.app.repository.PersonRepository;
 import com.app.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,14 +29,12 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void updateEmail(Person person, String email) {
-        try {
-            var field = Person.class.getDeclaredField("email");
-            field.setAccessible(true);
-            field.set(person, email);
-        } catch (Exception e) {
-            throw new IllegalStateException(e.getMessage());
+    public GetPersonDto updatePerson(UpdatePersonDto updatePersonDto, Integer id) {
+        if (personRepository.findById(id).isEmpty()) {
+            throw new IllegalArgumentException("Person with given id does not exist");
         }
+        var updatedPerson = personRepository.update(new Person(updatePersonDto), id);
+        return updatedPerson.toGetPersonDto();
     }
 
     @Override
@@ -48,5 +49,13 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.findByNameAndSurname(name, surname)
                 .orElseThrow(() -> new IllegalArgumentException("There is no Person with given id"))
                 .toGetPersonDto();
+    }
+
+    @Override
+    public List<GetPersonDto> getAllPersons() {
+        return personRepository.findAll()
+                .stream()
+                .map(Person::toGetPersonDto)
+                .toList();
     }
 }

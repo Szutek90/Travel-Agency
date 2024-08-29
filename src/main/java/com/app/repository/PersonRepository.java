@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PersonRepository extends CrudRepository<Person, Integer> {
-    List<Person> finBySurname(String surname);
+    List<Person> findBySurname(String surname);
 
     Optional<Person> findByNameAndSurname(String name, String surname);
 

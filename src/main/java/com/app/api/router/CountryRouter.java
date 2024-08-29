@@ -12,7 +12,7 @@ import static spark.Spark.*;
 
 @Component
 @RequiredArgsConstructor
-public class TourRouter {
+public class CountryRouter {
     private final ResponseTransformer responseTransformer;
     private final CountryService countryService;
     private final Gson gson;

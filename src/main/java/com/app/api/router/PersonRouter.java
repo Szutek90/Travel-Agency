@@ -2,6 +2,7 @@ package com.app.api.router;
 
 import com.app.api.dto.ResponseDto;
 import com.app.dto.person.CreatePersonDto;
+import com.app.dto.person.UpdatePersonDto;
 import com.app.service.PersonService;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +27,20 @@ public class PersonRouter {
                         return new ResponseDto<>(personService.addPerson(personToAdd));
                     },
                     responseTransformer);
+            get("", (request, response) -> {
+                        response.header("Content-Type", "application/json;charset=utf-8");
+                        return new ResponseDto<>(personService.getAllPersons());
+                    },
+                    responseTransformer);
             get("/:id", (request, response) -> {
                         var id = Integer.parseInt(request.params(":id"));
                         response.header("Content-Type", "application/json;charset=utf-8");
                         return new ResponseDto<>(personService.getPersonById(id));
                     },
                     responseTransformer);
+            // TODO [4] Obecnie mam taka sciezke: "http://localhost:8080/person?name=Pawel&surname=Kowalski"
+            // Ty robiles ja wedlug konwencji: http://localhost:8080/person/Pawel/Kowalski
+            // Czy one sa zamienne, czy byc moze ktora jest lepsza opcja?
             get("", (request, response) -> {
                         var name = request.queryParams("name");
                         var surname = request.queryParams("surname");
@@ -39,6 +48,17 @@ public class PersonRouter {
                         return new ResponseDto<>(personService.getPersonByNameAndSurname(name, surname));
                     },
                     responseTransformer);
+            put(
+                    "/:id",
+                    (request, response) -> {
+                        var id = Integer.parseInt(request.params("id"));
+                        var updatePersonDto
+                                = gson.fromJson(request.body(), UpdatePersonDto.class);
+                        response.header("Content-Type", "application/json;charset=utf-8");
+                        return new ResponseDto<>(personService.updatePerson(updatePersonDto, id));
+                    },
+                    responseTransformer
+            );
         });
     }
 }

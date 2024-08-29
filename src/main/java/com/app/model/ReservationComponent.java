@@ -1,11 +1,9 @@
 package com.app.model;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
-public enum Components {
+public enum ReservationComponent {
 
     ALL_INCLUSIVE("ALL_INCLUSIVE"),
     INSURANCE("INSURANCE"),
@@ -14,4 +12,7 @@ public enum Components {
 
     private final String component;
 
+    ReservationComponent(String component) {
+        this.component = component;
+    }
 }

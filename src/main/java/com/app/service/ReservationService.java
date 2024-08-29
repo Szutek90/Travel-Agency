@@ -1,6 +1,7 @@
 package com.app.service;
 
-import com.app.dto.ReservationDto;
+import com.app.dto.reservation.GetReservationDto;
+import com.app.dto.reservation.CreateReservationDto;
 import com.app.model.TourWithClosestAvgPriceByAgency;
 import com.app.model.agency.TravelAgency;
 import com.app.model.country.Country;
@@ -10,10 +11,11 @@ import com.app.model.tour.Tour;
 import java.util.List;
 import java.util.Map;
 
-public interface ReservationWIthTourPersonAgencyService {
-    void makeReservation(ReservationDto reservationDto);
+public interface ReservationService {
+    void makeReservation(CreateReservationDto createReservationDto);
 
-    void deleteReservation(Reservation reservation);
+    void deleteReservation(int id);
+    List<GetReservationDto> getAllReservations();
 
     List<TravelAgency> getAgencyWithMostOrganizedTrips();
 

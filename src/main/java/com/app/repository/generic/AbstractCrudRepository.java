@@ -24,10 +24,12 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
     public T save(T item) {
         var sql = "insert into %s %s values %s"
                 .formatted(tableName(), getColumnNames(), getColumnValues(item));
+        System.out.println(sql);
         var insertedRows = jdbi.withHandle(handle -> handle.execute(sql));
         if (insertedRows == 0) {
             throw new IllegalStateException("Row not inserted");
         }
+
         return findLast(1).getFirst();
     }
 
@@ -39,6 +41,7 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
                 items.stream()
                         .map(this::getColumnValues)
                         .collect(Collectors.joining(", ")));
+        System.out.println(sql);
         var inserterRows = jdbi.withHandle(handle -> handle.execute(sql));
         if (inserterRows == 0) {
             throw new IllegalStateException("Rows not inserted");
@@ -152,7 +155,7 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
         return " ( %s ) ".formatted(cols);
     }
 
-    private String getColumnValues(T item) {
+    protected String getColumnValues(T item) {
         var values = getDeclaredFieldsWithoutId()
                 .map(field -> {
                     try {

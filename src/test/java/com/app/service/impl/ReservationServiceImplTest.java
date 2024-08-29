@@ -1,7 +1,7 @@
 package com.app.service.impl;
 
-import com.app.dto.ReservationDto;
-import com.app.model.Components;
+import com.app.dto.reservation.CreateReservationDto;
+import com.app.model.ReservationComponent;
 import com.app.model.TourWithClosestAvgPriceByAgency;
 import com.app.model.agency.TravelAgency;
 import com.app.model.country.Country;
@@ -9,7 +9,6 @@ import com.app.model.person.Person;
 import com.app.model.reservation.Reservation;
 import com.app.model.tour.Tour;
 import com.app.repository.*;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -32,8 +30,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class ReservationWithTourPersonAgencyServiceImplTest {
-    static ReservationDto reservationDto;
+class ReservationServiceImplTest {
+    static CreateReservationDto createReservationDto;
     static Reservation reservation;
     static TravelAgency agency;
     static Tour tour;
@@ -50,18 +48,17 @@ class ReservationWithTourPersonAgencyServiceImplTest {
     CountryRepository countryRepository;
 
     @InjectMocks
-    ReservationWithTourPersonAgencyServiceImpl service;
+    ReservationServiceImpl service;
 
     @BeforeAll
     static void beforeAll() {
         var person = Person.builder().name("jan").surname("kowalski").id(1)
                 .email("jkowal@wp.pl").build();
-        reservationDto = new ReservationDto(person, new Tour(1, 1, 1, BigDecimal.ONE, LocalDate.now(),
+        createReservationDto = new CreateReservationDto(person, new Tour(1, 1, 1, BigDecimal.ONE, LocalDate.now(),
                 LocalDate.now()),
                 new TravelAgency(1, "Agency", "Warszawa", "123456"),
-                10, 0, List.of(Components.ALL_INCLUSIVE));
-        reservation = new Reservation(1, 1, 1, 1, 10, 0,
-                List.of(Components.ALL_INCLUSIVE));
+                10, 0, List.of(ReservationComponent.ALL_INCLUSIVE));
+        reservation = new Reservation(1, 1, 1, 1, 10, 0);
         agency = new TravelAgency(1, "Agencja 1", "Warszawa", "123456");
         tour = new Tour(1, 1, 1, BigDecimal.TEN, LocalDate.now(),
                 LocalDate.now());
@@ -78,14 +75,14 @@ class ReservationWithTourPersonAgencyServiceImplTest {
                 .surname("kowalski")
                 .build()));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
-        assertThatCode(() -> service.makeReservation(reservationDto))
+        assertThatCode(() -> service.makeReservation(createReservationDto))
                 .doesNotThrowAnyException();
     }
 
     @Test
     @DisplayName("When tour is not found while making reservation")
     void test2() {
-        assertThatThrownBy(() -> service.makeReservation(reservationDto))
+        assertThatThrownBy(() -> service.makeReservation(createReservationDto))
                 .isInstanceOf(IllegalStateException.class).hasMessage("tour not found");
     }
 
@@ -93,7 +90,7 @@ class ReservationWithTourPersonAgencyServiceImplTest {
     @DisplayName("When person is not found while making reservation")
     void test3() {
         when(tourRepository.findById(anyInt())).thenReturn(Optional.of(new Tour()));
-        assertThatThrownBy(() -> service.makeReservation(reservationDto))
+        assertThatThrownBy(() -> service.makeReservation(createReservationDto))
                 .isInstanceOf(IllegalStateException.class).hasMessage("person not found");
     }
 
@@ -101,7 +98,7 @@ class ReservationWithTourPersonAgencyServiceImplTest {
     @DisplayName("When deleting reservation")
     void test4() {
         when(reservationRepository.deleteById(anyInt())).thenReturn(reservation);
-        assertThatCode(() -> service.deleteReservation(reservation)).doesNotThrowAnyException();
+        assertThatCode(() -> service.deleteReservation(8)).doesNotThrowAnyException();
     }
 
     @Test

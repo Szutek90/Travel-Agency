@@ -4,6 +4,7 @@ import com.app.persistence.converter.impl.CountriesGsonConverter;
 import com.app.persistence.converter.impl.ToursGsonConverter;
 import com.app.persistence.converter.impl.TravelAgenciesGsonConverter;
 import com.app.persistence.deserializer.custom.LocalDateDeserializer;
+import com.app.persistence.deserializer.custom.LocalDateSerializer;
 import com.app.persistence.deserializer.impl.CountriesDeserializer;
 import com.app.persistence.deserializer.impl.ToursDeserializer;
 import com.app.persistence.deserializer.impl.TravelAgenciesDeserializer;
@@ -47,6 +48,7 @@ public class AppConfig {
     public Gson gson() {
         return new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
+                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
                 .setPrettyPrinting().create();
     }
 
@@ -99,11 +101,12 @@ public class AppConfig {
                 """;
 
         var componentsSql = """
-                CREATE TABLE IF NOT EXISTS reservations_components (
+                CREATE TABLE IF NOT EXISTS reservation_components (
                     reservation_id INTEGER NOT NULL,
                     component VARCHAR(50) NOT NULL,
                     PRIMARY KEY (reservation_id, component),
-                    FOREIGN KEY (reservation_id) REFERENCES reservations(id)
+                    FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE
+    
                 );
                 """;
 
