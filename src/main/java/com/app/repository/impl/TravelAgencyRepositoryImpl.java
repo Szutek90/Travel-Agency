@@ -3,8 +3,10 @@ package com.app.repository.impl;
 import com.app.model.agency.TravelAgency;
 import com.app.model.agency.TravelAgencyMapper;
 import com.app.repository.TravelAgencyRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -13,8 +15,13 @@ import java.util.Optional;
 public class TravelAgencyRepositoryImpl implements TravelAgencyRepository {
     private final List<TravelAgency> travelAgencies;
 
+    @Autowired
     public TravelAgencyRepositoryImpl(List<TravelAgency> travelAgencies) {
         this.travelAgencies = travelAgencies;
+    }
+
+    public TravelAgencyRepositoryImpl() {
+        this.travelAgencies = new ArrayList<>();
     }
 
     @Override

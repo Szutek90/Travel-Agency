@@ -4,12 +4,14 @@ import com.app.model.country.Country;
 import com.app.repository.CountryRepository;
 import com.app.repository.generic.AbstractCrudRepository;
 import org.jdbi.v3.core.Jdbi;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
 public class CountryRepositoryImpl extends AbstractCrudRepository<Country, Integer> implements CountryRepository {
+   @Autowired
     public CountryRepositoryImpl(Jdbi jdbi) {
         super(jdbi);
     }
