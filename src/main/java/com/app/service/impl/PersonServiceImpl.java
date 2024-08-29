@@ -1,11 +1,10 @@
 package com.app.service.impl;
 
-import com.app.dto.PersonDto;
+import com.app.dto.person.CreatePersonDto;
+import com.app.dto.person.GetPersonDto;
 import com.app.model.person.Person;
-import com.app.model.person.PersonMapper;
 import com.app.repository.PersonRepository;
 import com.app.service.PersonService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,37 +13,40 @@ import org.springframework.stereotype.Service;
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
 
-    public Person addPerson(PersonDto personDto) {
+    public GetPersonDto addPerson(CreatePersonDto personDto) {
         if (personRepository.findByEmail(personDto.email()).isPresent()) {
             throw new IllegalArgumentException("Person with given email already exist");
         }
-        return personRepository.save(Person.builder()
+        var personTosave = personRepository.save(Person.builder()
                 .name(personDto.name())
                 .surname(personDto.surname())
                 .email(personDto.email())
                 .build());
+        return personTosave.toGetPersonDto();
     }
 
     @Override
     public void updateEmail(Person person, String email) {
-            try {
-                var field = Person.class.getDeclaredField("email");
-                field.setAccessible(true);
-                field.set(person, email);
-            } catch (Exception e) {
-                throw new IllegalStateException(e.getMessage());
-            }
+        try {
+            var field = Person.class.getDeclaredField("email");
+            field.setAccessible(true);
+            field.set(person, email);
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage());
+        }
     }
 
     @Override
-    public Person getPersonById(int id) {
+    public GetPersonDto getPersonById(int id) {
         return personRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("There is no Person with given id"));
+                .orElseThrow(() -> new IllegalArgumentException("There is no Person with given id"))
+                .toGetPersonDto();
     }
 
     @Override
-    public Person getPersonByNameAndSurname(String name, String surname) {
+    public GetPersonDto getPersonByNameAndSurname(String name, String surname) {
         return personRepository.findByNameAndSurname(name, surname)
-                .orElseThrow(() -> new IllegalArgumentException("There is no Person with given id"));
+                .orElseThrow(() -> new IllegalArgumentException("There is no Person with given id"))
+                .toGetPersonDto();
     }
 }

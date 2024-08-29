@@ -1,8 +1,11 @@
 package com.app.service;
 
-import com.app.dto.CountryDto;
-import com.app.model.country.Country;
+import com.app.dto.country.CreateCountryDto;
+import com.app.dto.country.GetCountryDto;
+
+import java.util.List;
 
 public interface CountryService {
-    Country addCountry(CountryDto countryDto);
+    GetCountryDto addCountry(CreateCountryDto countryDto);
+    List<GetCountryDto> getAllCountries();
 }

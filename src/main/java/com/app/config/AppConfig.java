@@ -7,8 +7,6 @@ import com.app.persistence.deserializer.custom.LocalDateDeserializer;
 import com.app.persistence.deserializer.impl.CountriesDeserializer;
 import com.app.persistence.deserializer.impl.ToursDeserializer;
 import com.app.persistence.deserializer.impl.TravelAgenciesDeserializer;
-import com.app.repository.CountryRepository;
-import com.app.repository.TourRepository;
 import com.app.repository.TravelAgencyRepository;
 import com.app.repository.impl.CountryRepositoryImpl;
 import com.app.repository.impl.TourRepositoryImpl;

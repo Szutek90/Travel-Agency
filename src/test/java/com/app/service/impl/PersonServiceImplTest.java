@@ -1,6 +1,6 @@
 package com.app.service.impl;
 
-import com.app.dto.PersonDto;
+import com.app.dto.person.CreatePersonDto;
 import com.app.model.person.Person;
 import com.app.repository.PersonRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class PersonServiceImplTest {
     static Person person;
-    static PersonDto personDto;
+    static CreatePersonDto personDto;
 
     @Mock
     PersonRepository repository;
@@ -39,7 +39,7 @@ class PersonServiceImplTest {
                 .surname("kowalski")
                 .build();
 
-        personDto = new PersonDto("jan", "kowalski", "kowal@gmail.com");
+        personDto = new CreatePersonDto("jan", "kowalski", "kowal@gmail.com");
     }
 
     @Test

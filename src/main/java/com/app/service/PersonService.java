@@ -1,11 +1,12 @@
 package com.app.service;
 
-import com.app.dto.PersonDto;
+import com.app.dto.person.CreatePersonDto;
+import com.app.dto.person.GetPersonDto;
 import com.app.model.person.Person;
 
 public interface PersonService {
-    Person addPerson(PersonDto personDto);
+    GetPersonDto addPerson(CreatePersonDto personDto);
     void updateEmail(Person person, String email);
-    Person getPersonById(int id);
-    Person getPersonByNameAndSurname(String name, String surname);
+    GetPersonDto getPersonById(int id);
+    GetPersonDto getPersonByNameAndSurname(String name, String surname);
 }

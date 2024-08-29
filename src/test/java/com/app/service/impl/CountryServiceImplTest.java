@@ -1,7 +1,7 @@
 package com.app.service.impl;
 
 
-import com.app.dto.CountryDto;
+import com.app.dto.country.CreateCountryDto;
 import com.app.model.country.Country;
 import com.app.repository.CountryRepository;
 import org.assertj.core.api.Assertions;
@@ -29,7 +29,7 @@ class CountryServiceImplTest {
     @Test
     @DisplayName("When adding country")
     void test1() {
-        var countryDto = new CountryDto("Majorka");
+        var countryDto = new CreateCountryDto("Majorka");
         Mockito.when(repository.findByCountry(Mockito.anyString()))
                 .thenReturn(Optional.empty());
         Mockito.when(repository.save(Mockito.any(Country.class)))
@@ -40,7 +40,7 @@ class CountryServiceImplTest {
     @Test
     @DisplayName("When country already exists")
     void test2() {
-        var countryDto = new CountryDto("Majorka");
+        var countryDto = new CreateCountryDto("Majorka");
         Mockito.when(repository.findByCountry(Mockito.anyString()))
                 .thenReturn(Optional.of(new Country(1, "Polska")));
         Assertions.assertThatThrownBy(() -> service.addCountry(countryDto))
