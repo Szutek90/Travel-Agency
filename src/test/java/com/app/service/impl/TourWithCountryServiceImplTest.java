@@ -5,14 +5,12 @@ import com.app.model.country.Country;
 import com.app.model.tour.Tour;
 import com.app.repository.CountryRepository;
 import com.app.repository.TourRepository;
-import org.assertj.core.api.Assertions;
 import org.jdbi.v3.core.collector.ElementTypeNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -81,7 +79,7 @@ class TourWithCountryServiceImplTest {
                 .endDate(LocalDate.now())
                 .countryId(5)
                 .build();
-        when(tourRepository.getLessThanGiveNPrice(any())).thenReturn(List.of(expected));
+        when(tourRepository.getLessThanGivenPrice(any())).thenReturn(List.of(expected));
         assertThat(service.getToursCheaperThan(BigDecimal.valueOf(50)))
                 .containsExactly(expected);
     }

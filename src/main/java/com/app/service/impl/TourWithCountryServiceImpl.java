@@ -38,7 +38,7 @@ public class TourWithCountryServiceImpl implements TourWithCountryService {
 
     @Override
     public List<Tour> getToursCheaperThan(BigDecimal priceTo) {
-        return tourRepository.getLessThanGiveNPrice(priceTo);
+        return tourRepository.getLessThanGivenPrice(priceTo);
     }
 
     @Override

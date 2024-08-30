@@ -12,7 +12,7 @@ public interface TourRepository extends CrudRepository<Tour, Integer> {
 
     List<Tour> getInPriceRange(BigDecimal from, BigDecimal to);
 
-    List<Tour> getLessThanGiveNPrice(BigDecimal to);
+    List<Tour> getLessThanGivenPrice(BigDecimal to);
 
     List<Tour> getMoreExpensiveThanGivenPrice(BigDecimal from);
     List<Tour> getInDateRange(LocalDate from, LocalDate to);

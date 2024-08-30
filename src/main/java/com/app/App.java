@@ -3,6 +3,7 @@ package com.app;
 import com.app.api.router.PersonRouter;
 import com.app.api.router.CountryRouter;
 import com.app.api.router.ReservationRouter;
+import com.app.api.router.TourWithCountryRouter;
 import com.app.config.AppConfig;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -22,8 +23,11 @@ public class App {
         var personRouter = context.getBean("personRouter", PersonRouter.class);
         var reservationRouter
                 = context.getBean("reservationRouter", ReservationRouter.class);
+        var tourWithCountryRouter
+                = context.getBean("tourWithCountryRouter", TourWithCountryRouter.class);
         countryRouter.routes();
         personRouter.routes();
         reservationRouter.routes();
+        tourWithCountryRouter.routes();
     }
 }

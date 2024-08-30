@@ -18,8 +18,7 @@ public class TourRepositoryImpl extends AbstractCrudRepository<Tour, Integer> im
 
     @Override
     public List<Tour> getByCountryName(String countryName) {
-        var sql = "SELECT * FROM %s t join countries c on t.country_id = c.id WHERE c.name = :countryName"
-                .formatted(tableName());
+        var sql = "SELECT * FROM tours t WHERE t.country_id = (SELECT id FROM countries WHERE name = :countryName)";
         return jdbi.withHandle(handle -> handle
                 .createQuery(sql)
                 .bind("countryName", countryName)
@@ -40,8 +39,8 @@ public class TourRepositoryImpl extends AbstractCrudRepository<Tour, Integer> im
     }
 
     @Override
-    public List<Tour> getLessThanGiveNPrice(BigDecimal to) {
-        var sql = "SELECT * from %s where price_per_person < :to".formatted(tableName());
+    public List<Tour> getLessThanGivenPrice(BigDecimal to) {
+        var sql = "SELECT * from %s where price_per_person <= :to".formatted(tableName());
         return jdbi.withHandle(handle -> handle
                 .createQuery(sql)
                 .bind("to", to)
