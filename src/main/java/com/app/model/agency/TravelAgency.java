@@ -1,5 +1,6 @@
 package com.app.model.agency;
 
+import com.app.dto.travel_agency.GetTravelAgencyDto;
 import lombok.*;
 
 @EqualsAndHashCode
@@ -10,4 +11,8 @@ public class TravelAgency {
     final String name;
     final String city;
     private final String phoneNumber;
+
+    public GetTravelAgencyDto toGetTravelAgencyDto() {
+        return new GetTravelAgencyDto(name, city, phoneNumber);
+    }
 }

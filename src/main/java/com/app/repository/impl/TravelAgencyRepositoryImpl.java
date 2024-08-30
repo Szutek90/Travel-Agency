@@ -52,7 +52,8 @@ public class TravelAgencyRepositoryImpl implements TravelAgencyRepository {
 
     @Override
     public int save(TravelAgency travelAgency) {
-        return 0;
+        this.travelAgencies.add(travelAgency);
+        return TravelAgencyMapper.toId.applyAsInt(travelAgency);
     }
 
     @Override

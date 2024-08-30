@@ -1,9 +1,9 @@
 package com.app.service.impl;
 
-import com.app.dto.TravelAgencyDto;
+import com.app.dto.travel_agency.CreateTravelAgencyDto;
+import com.app.dto.travel_agency.GetTravelAgencyDto;
 import com.app.model.agency.TravelAgency;
 import com.app.repository.TravelAgencyRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -81,7 +81,7 @@ class TravelAgencyServiceImplTest {
     @DisplayName("When adding new travel agency")
     void test6(){
         var expected = new TravelAgency(2,"Agency2", "London", "987654852");
-        var travelAgencyDto = new TravelAgencyDto("Agency2", "London", "987654852");
+        var travelAgencyDto = new CreateTravelAgencyDto("Agency2", "London", "987654852");
         when(repository.findByName(anyString())).thenReturn(Optional.empty());
         when(repository.save(any())).thenReturn(2);
         when(repository.getAll()).thenReturn(List.of(travelAgency));
@@ -91,7 +91,7 @@ class TravelAgencyServiceImplTest {
     @Test
     @DisplayName("When agency is present during adding new travel agency")
     void test7(){
-        var travelAgencyDto = new TravelAgencyDto("Agency2", "London", "987654852");
+        var travelAgencyDto = new CreateTravelAgencyDto("Agency2", "London", "987654852");
         when(repository.findByName(anyString())).thenReturn(Optional.of(travelAgency));
         assertThatThrownBy(() -> service.addTravelAgency(travelAgencyDto))
                 .isInstanceOf(IllegalArgumentException.class)
