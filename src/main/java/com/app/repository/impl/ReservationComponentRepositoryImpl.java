@@ -20,9 +20,7 @@ public class ReservationComponentRepositoryImpl extends AbstractCrudRepository<R
         return jdbi.withHandle(handle -> handle
                 .createQuery(sql)
                 .bind("reservation_id", id)
-                .mapTo(String.class)
-                .map(ReservationComponent::valueOf)
-                //TODO czy to jest poprawne mapowanie: 1. do String -> 2. do Enum. Moze jest jakas szybsza metoda?
+                .map((rs, ctx) -> ReservationComponent.valueOf(rs.getString("component")))
                 .list());
     }
 

@@ -1,5 +1,7 @@
 package com.app.config;
 
+import com.app.model.country.Country;
+import com.app.model.tour.Tour;
 import com.app.persistence.converter.impl.CountriesGsonConverter;
 import com.app.persistence.converter.impl.ToursGsonConverter;
 import com.app.persistence.converter.impl.TravelAgenciesGsonConverter;
@@ -9,8 +11,6 @@ import com.app.persistence.deserializer.impl.CountriesDeserializer;
 import com.app.persistence.deserializer.impl.ToursDeserializer;
 import com.app.persistence.deserializer.impl.TravelAgenciesDeserializer;
 import com.app.repository.TravelAgencyRepository;
-import com.app.repository.impl.CountryRepositoryImpl;
-import com.app.repository.impl.TourRepositoryImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 
 @Configuration
@@ -31,17 +30,16 @@ import java.time.LocalDate;
 public class AppConfig {
     private final Environment env;
     private final TravelAgencyRepository travelAgencyRepo;
-    //TODO[3]
-//    private final CountryRepository countryRepo;
-//    private final TourRepository tourRepo;
 
     @Bean
     public Jdbi jdbi() {
         var url = env.getRequiredProperty("db.url");
         var user = env.getRequiredProperty("db.user");
         var password = env.getRequiredProperty("db.password");
-
-        return Jdbi.create(url, user, password);
+        var jdbi = Jdbi.create(url, user, password);
+        createTables(jdbi);
+        replenishDb(jdbi);
+        return jdbi;
     }
 
     @Bean
@@ -52,13 +50,7 @@ public class AppConfig {
                 .setPrettyPrinting().create();
     }
 
-    @PostConstruct
-    private void postConstruct() {
-        createTables();
-        replenishDb();
-    }
-
-    private void createTables() {
+    private void createTables(Jdbi jdbi) {
         var countrySql = """
                 CREATE TABLE IF NOT EXISTS countries (
                     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -106,11 +98,11 @@ public class AppConfig {
                     component VARCHAR(50) NOT NULL,
                     PRIMARY KEY (reservation_id, component),
                     FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE
-    
+                    
                 );
                 """;
 
-        jdbi().useHandle(handle -> {
+        jdbi.useHandle(handle -> {
             handle.execute(countrySql);
             handle.execute(personSql);
             handle.execute(toursSql);
@@ -119,35 +111,19 @@ public class AppConfig {
         });
     }
 
-    private void replenishDb() {
-        //TODO [2] Czy to jest poprawne, ze w tym miejscu jest to wstrzykiwane, a nie jak w Todo [3]?
-        // jesli chce to wstrzyknac jak w miejscu Todo[3] to otrzymuje blad. Nie rozumiem dlaczego przy
-        // TravelAgencyRepository nie otrzymuje bledu
-        /*
-        Exception in thread "main" org.springframework.beans.factory.UnsatisfiedDependencyException:
-         Error creating bean with name 'appConfig': Unsatisfied dependency expressed through constructor parameter
-         2: Error creating bean with name 'countryRepositoryImpl' defined in file
-         [D:\KMPrograms\Java\GIT\TravelAgency\target\classes\com\app\repository\impl\CountryRepositoryImpl.class]:
-          Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name
-          'appConfig': Requested bean is currently in creation: Is there an unresolvable circular reference?
-
-            Czy moze chodzic o to, ze w Country i Tour repository jest wykorzystywane jdbi, ktore ma Beana w tej klasie
-            a travel agency repository nie wykorzystuje jdbi?
-            Jesli dobrze podejrzewam to moze wystapic sytuacja, ze Bean jdbi nie zdarzy sie stworzyc aby wstrzyknac sie do
-            dwoch repozytoriow
-         */
-        var countryRepo = new CountryRepositoryImpl(jdbi());
-        var tourRepo = new TourRepositoryImpl(jdbi());
-
-        if (countryRepo.findAll().isEmpty()) {
+    private void replenishDb(Jdbi jdbi) {
+    var dbReplenisher = new DbReplenisher();
+        if (dbReplenisher.getAll(jdbi, Country.class, "countries").isEmpty()) {
             var countryConverter = new CountriesGsonConverter(gson());
             var deserializer = new CountriesDeserializer(countryConverter);
-            countryRepo.saveAll(deserializer.deserialize("countries.json").countries());
+            var items = deserializer.deserialize("countries.json").countries();
+            dbReplenisher.saveAll("countries", items, jdbi, Country.class);
         }
-        if (tourRepo.findAll().isEmpty()) {
+        if (dbReplenisher.getAll(jdbi, Tour.class, "tours").isEmpty()) {
             var toursConverter = new ToursGsonConverter(gson());
             var deserializer = new ToursDeserializer(toursConverter);
-            tourRepo.saveAll(deserializer.deserialize("tours.json").tours());
+            var items = deserializer.deserialize("tours.json").tours();
+            dbReplenisher.saveAll("tours", items, jdbi, Tour.class);
         }
         if (travelAgencyRepo.getAll().isEmpty()) {
             var travelAgencyConverter = new TravelAgenciesGsonConverter(gson());
@@ -155,4 +131,6 @@ public class AppConfig {
             travelAgencyRepo.saveAll(deserializer.deserialize("agencies.json").travelAgencies());
         }
     }
+
+
 }

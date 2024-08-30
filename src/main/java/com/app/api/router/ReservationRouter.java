@@ -17,7 +17,7 @@ public class ReservationRouter {
     private final ReservationService reservationService;
     private final Gson gson;
 
-    public void routes(){
+    public void routes() {
         path("/reservation", () -> {
             get("", (request, response) -> {
                         response.header("Content-Type", "application/json;charset=utf-8");
@@ -45,6 +45,30 @@ public class ReservationRouter {
                     },
                     responseTransformer
             );
+            path("/most", () -> {
+                get("/trips", (request, response) -> {
+                    response.header("Content-Type", "application/json;charset=utf-8");
+                    return new ResponseDto<>(reservationService.getAgencyWithMostOrganizedTrips());
+                },
+                        responseTransformer);
+                get("/money", (request, response) -> {
+                            response.header("Content-Type", "application/json;charset=utf-8");
+                            return new ResponseDto<>(reservationService.getAgencyEarnMostMoney());
+                        },
+                        responseTransformer);
+                get("/visit", (request, response) -> {
+                            response.header("Content-Type", "application/json;charset=utf-8");
+                            return new ResponseDto<>(reservationService.getMostVisitedCountries());
+                        },
+                        responseTransformer);
+            });
+            path("/summary", () -> {
+                get("", (request, response) -> {
+                    response.header("Content-Type", "application/json;charset=utf-8");
+                    return new ResponseDto<>(reservationService.getSummaryByTourAvgPrice());
+                },
+                        responseTransformer);
+            });
         });
     }
 }

@@ -38,9 +38,6 @@ public class PersonRouter {
                         return new ResponseDto<>(personService.getPersonById(id));
                     },
                     responseTransformer);
-            // TODO [4] Obecnie mam taka sciezke: "http://localhost:8080/person?name=Pawel&surname=Kowalski"
-            // Ty robiles ja wedlug konwencji: http://localhost:8080/person/Pawel/Kowalski
-            // Czy one sa zamienne, czy byc moze ktora jest lepsza opcja?
             get("", (request, response) -> {
                         var name = request.queryParams("name");
                         var surname = request.queryParams("surname");

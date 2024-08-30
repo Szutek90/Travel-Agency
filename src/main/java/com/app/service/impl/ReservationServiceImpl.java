@@ -76,7 +76,6 @@ public class ReservationServiceImpl implements ReservationService {
                 )
                 .toList();
     }
-// TODO [ 6 ] Jakie ustawić routingi dla poniższych metod?
     @Override
     public List<TravelAgency> getAgencyWithMostOrganizedTrips() {
         return reservationRepository.findAll().stream()
@@ -91,7 +90,6 @@ public class ReservationServiceImpl implements ReservationService {
                 .map(Map.Entry::getValue)
                 .orElseThrow();
     }
-
     @Override
     public List<TravelAgency> getAgencyEarnMostMoney() {
         return reservationRepository.findAll().stream()

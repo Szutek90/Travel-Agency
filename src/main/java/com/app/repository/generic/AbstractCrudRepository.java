@@ -41,7 +41,6 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
                 items.stream()
                         .map(this::getColumnValues)
                         .collect(Collectors.joining(", ")));
-        System.out.println(sql);
         var inserterRows = jdbi.withHandle(handle -> handle.execute(sql));
         if (inserterRows == 0) {
             throw new IllegalStateException("Rows not inserted");

@@ -15,7 +15,6 @@ public class App {
     public static void main(String[] args) {
         var context = new AnnotationConfigApplicationContext(AppConfig.class);
 
-
         initExceptionHandler(err -> log.error(err.getMessage()));
         port(8080);
 
