@@ -26,4 +26,6 @@ public interface ReservationService {
     Map<TravelAgency, TourWithClosestAvgPriceByAgency> getSummaryByTourAvgPrice();
 
     List<Tour> getToursTakingPlaceInGivenCountry(List<String> countryNames);
+
+    GetReservationDto toGetReservationDto(Reservation reservation);
 }

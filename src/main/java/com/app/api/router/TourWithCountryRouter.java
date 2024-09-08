@@ -19,22 +19,18 @@ public class TourWithCountryRouter {
 
     public void routes() {
         path("/tour", () -> {
-            path("/id", () -> {
-                get("/:id", (request, response) -> {
-                            var id = Integer.parseInt(request.params(":id"));
-                            response.header("Content-Type", "application/json;charset=utf-8");
-                            return new ResponseDto<>(service.getById(id));
-                        },
-                        responseTransformer);
-            });
-            path("/country", () -> {
-                get("/:country", (request, response) -> {
-                            var country = request.params(":country");
-                            response.header("Content-Type", "application/json;charset=utf-8");
-                            return new ResponseDto<>(service.getByCountry(country));
-                        },
-                        responseTransformer);
-            });
+            path("/id", () -> get("/:id", (request, response) -> {
+                        var id = Integer.parseInt(request.params(":id"));
+                        response.header("Content-Type", "application/json;charset=utf-8");
+                        return new ResponseDto<>(service.getById(id));
+                    },
+                    responseTransformer));
+            path("/country", () -> get("/:country", (request, response) -> {
+                        var country = request.params(":country");
+                        response.header("Content-Type", "application/json;charset=utf-8");
+                        return new ResponseDto<>(service.getByCountry(country));
+                    },
+                    responseTransformer));
             get("/price-range", (request, response) -> {
                         var from = new BigDecimal(request.queryParams("from"));
                         var to = new BigDecimal(request.queryParams("to"));

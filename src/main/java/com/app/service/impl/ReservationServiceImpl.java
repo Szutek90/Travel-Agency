@@ -41,16 +41,17 @@ public class ReservationServiceImpl implements ReservationService {
             throw new IllegalStateException("person not found");
         }
 
-        var reservation = reservationRepository.save(Reservation.builder()
-                .tourId(TourMapper.toId.applyAsInt(createReservationDto.tour()))
-                .customerId(PersonMapper.toId.applyAsInt(createReservationDto.customer()))
-                .agencyId(TravelAgencyMapper.toId.applyAsInt(createReservationDto.travelAgency()))
-                .quantityOfPeople(createReservationDto.quantityOfPeople())
-                .discount(createReservationDto.discount())
-                .build());
+        var reservation = reservationRepository.save(
+                Reservation.builder()
+                        .tourId(createReservationDto.tour().getId())
+                        .customerId(createReservationDto.customer().getId())
+                        .agencyId(TravelAgencyMapper.toId.applyAsInt(createReservationDto.travelAgency()))
+                        .quantityOfPeople(createReservationDto.quantityOfPeople())
+                        .discount(createReservationDto.discount())
+                        .build());
         var reservationId = ReservationMapper.toId.applyAsInt(reservation);
         var components = createReservationDto.reservationComponents();
-        for(var component : components) {
+        for (var component : components) {
             componentRepository.save(reservationId, component);
         }
     }
@@ -63,19 +64,12 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<GetReservationDto> getAllReservations() {
         var allReservations = reservationRepository.findAll();
-        return allReservations.stream().map(e ->
-                            new GetReservationDto(tourRepository.findById(ReservationMapper.toTourId.applyAsInt(e))
-                                    .orElseThrow(() -> new IllegalArgumentException("No tour with given id")),
-                                    travelAgencyRepository.findById(ReservationMapper.toAgencyId.applyAsInt(e))
-                                            .orElseThrow(() -> new IllegalArgumentException("No agency with given id")),
-                                    personRepository.findById(ReservationMapper.toPersonId.applyAsInt(e))
-                                            .orElseThrow(() -> new IllegalArgumentException("No person with given id")),
-                                    ReservationMapper.toQuantityOfPeople.applyAsInt(e),
-                                    ReservationMapper.toDiscount.applyAsInt(e),
-                                    componentRepository.findByReservationId(ReservationMapper.toId.applyAsInt(e)))
-                )
+        return allReservations
+                .stream()
+                .map(this::toGetReservationDto)
                 .toList();
     }
+
     @Override
     public List<TravelAgency> getAgencyWithMostOrganizedTrips() {
         return reservationRepository.findAll().stream()
@@ -90,6 +84,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .map(Map.Entry::getValue)
                 .orElseThrow();
     }
+
     @Override
     public List<TravelAgency> getAgencyEarnMostMoney() {
         return reservationRepository.findAll().stream()
@@ -154,6 +149,21 @@ public class ReservationServiceImpl implements ReservationService {
             tours.addAll(tourRepository.getByCountryName(countryName));
         }
         return tours;
+    }
+
+    @Override
+    public GetReservationDto toGetReservationDto(Reservation reservation) {
+        return new GetReservationDto(
+                tourRepository.findById(ReservationMapper.toTourId.applyAsInt(reservation))
+                        .orElseThrow(() -> new IllegalArgumentException("No tour with given id")),
+                travelAgencyRepository.findById(ReservationMapper.toAgencyId.applyAsInt(reservation))
+                        .orElseThrow(() -> new IllegalArgumentException("No agency with given id")),
+                personRepository.findById(ReservationMapper.toPersonId.applyAsInt(reservation))
+                        .orElseThrow(() -> new IllegalArgumentException("No person with given id")),
+                ReservationMapper.toQuantityOfPeople.applyAsInt(reservation),
+                ReservationMapper.toDiscount.applyAsInt(reservation),
+                componentRepository
+                        .findByReservationId(ReservationMapper.toId.applyAsInt(reservation)));
     }
 
 }

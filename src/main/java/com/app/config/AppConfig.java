@@ -98,21 +98,24 @@ public class AppConfig {
                     component VARCHAR(50) NOT NULL,
                     PRIMARY KEY (reservation_id, component),
                     FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE
-                    
                 );
                 """;
 
         jdbi.useHandle(handle -> {
-            handle.execute(countrySql);
-            handle.execute(personSql);
-            handle.execute(toursSql);
-            handle.execute(reservationSql);
-            handle.execute(componentsSql);
+            handle.inTransaction(transactionHandle -> {
+                transactionHandle.execute(countrySql);
+                transactionHandle.execute(personSql);
+                transactionHandle.execute(toursSql);
+                transactionHandle.execute(reservationSql);
+                transactionHandle.execute(componentsSql);
+                return null;
+            });
         });
+
     }
 
     private void replenishDb(Jdbi jdbi) {
-    var dbReplenisher = new DbReplenisher();
+    var dbReplenisher = new DbFiller();
         if (dbReplenisher.getAll(jdbi, Country.class, "countries").isEmpty()) {
             var countryConverter = new CountriesGsonConverter(gson());
             var deserializer = new CountriesDeserializer(countryConverter);

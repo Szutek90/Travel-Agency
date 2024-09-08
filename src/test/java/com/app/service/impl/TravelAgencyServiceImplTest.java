@@ -1,7 +1,6 @@
 package com.app.service.impl;
 
 import com.app.dto.travel_agency.CreateTravelAgencyDto;
-import com.app.dto.travel_agency.GetTravelAgencyDto;
 import com.app.model.agency.TravelAgency;
 import com.app.repository.TravelAgencyRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,7 +41,7 @@ class TravelAgencyServiceImplTest {
     @DisplayName("When getting by id")
     void test1(){
         when(repository.findById(anyInt())).thenReturn(Optional.of(travelAgency));
-        assertThat(service.getTravelAgencyById(1)).isEqualTo(travelAgency);
+        assertThat(service.getTravelAgencyById(1)).isEqualTo(travelAgency.toGetTravelAgencyDto());
     }
 
     @Test
@@ -58,7 +57,8 @@ class TravelAgencyServiceImplTest {
     @DisplayName("When getting by name")
     void test3(){
         when(repository.findByName("Best Agency")).thenReturn(Optional.of(travelAgency));
-        assertThat(service.getTravelAgencyByName("Best Agency")).isEqualTo(travelAgency);
+        assertThat(service.getTravelAgencyByName("Best Agency"))
+                .isEqualTo(travelAgency.toGetTravelAgencyDto());
     }
 
     @Test
@@ -74,7 +74,8 @@ class TravelAgencyServiceImplTest {
     @DisplayName("When getting agencies by city")
     void test5(){
         when(repository.findByCity("Warsaw")).thenReturn(List.of(travelAgency));
-        assertThat(service.getAllTravelAgenciesByCity("Warsaw")).isEqualTo(List.of(travelAgency));
+        assertThat(service.getAllTravelAgenciesByCity("Warsaw"))
+                .isEqualTo(List.of(travelAgency.toGetTravelAgencyDto()));
     }
 
     @Test
@@ -85,7 +86,7 @@ class TravelAgencyServiceImplTest {
         when(repository.findByName(anyString())).thenReturn(Optional.empty());
         when(repository.save(any())).thenReturn(2);
         when(repository.getAll()).thenReturn(List.of(travelAgency));
-        assertThat(service.addTravelAgency(travelAgencyDto)).isEqualTo(expected);
+        assertThat(service.addTravelAgency(travelAgencyDto)).isEqualTo(expected.toGetTravelAgencyDto());
     }
 
     @Test
@@ -96,5 +97,12 @@ class TravelAgencyServiceImplTest {
         assertThatThrownBy(() -> service.addTravelAgency(travelAgencyDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("There is already a Travel Agency with given name");
+    }
+
+    @Test
+    @DisplayName("When getting all travel agencies")
+    void test8(){
+        when(repository.getAll()).thenReturn(List.of(travelAgency));
+        assertThat(service.getAllTravelAgency()).isEqualTo(List.of(travelAgency.toGetTravelAgencyDto()));
     }
 }

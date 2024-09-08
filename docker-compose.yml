@@ -15,6 +15,19 @@ services:
       - "3307:3307"
     expose:
       - 3307
+    networks:
+      - "spark_network"
+
+  web-app:
+    image: szutek90/web-app:1.0
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - "spark_network"
+
 
 volumes:
   mysql:
+networks:
+  spark_network:

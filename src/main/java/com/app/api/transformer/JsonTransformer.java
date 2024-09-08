@@ -11,7 +11,7 @@ public class JsonTransformer implements ResponseTransformer {
     private final Gson gson;
 
     @Override
-    public String render(Object o) throws Exception {
+    public String render(Object o) {
         return gson.toJson(o);
     }
 }

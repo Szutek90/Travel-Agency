@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class DbReplenisher {
+class DbFiller {
     public <T> List<T> getAll(Jdbi jdbi, Class<T> type, String tableName) {
         var sql = "select * from %s".formatted(tableName);
         return jdbi.withHandle(handle -> handle

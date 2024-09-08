@@ -3,7 +3,6 @@ package com.app.service;
 import com.app.dto.person.CreatePersonDto;
 import com.app.dto.person.GetPersonDto;
 import com.app.dto.person.UpdatePersonDto;
-import com.app.model.person.Person;
 
 import java.util.List;
 

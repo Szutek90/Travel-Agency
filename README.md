@@ -1,7 +1,7 @@
 # Travel Agency
 
 ![Install](https://img.shields.io/badge/install-passing-green)
-![Install](https://img.shields.io/badge/coverage-40%25-light%20green)
+![Install](https://img.shields.io/badge/coverage-35%25-light%20green)
 
 The project consists of integrating data from a text file and a database in a Java application. Here is a brief
 description of what it does:
@@ -20,12 +20,19 @@ The database initialization data can be retrieved from .json files
 * JUnit
 * AssertJ
 * Mockito
+* MySQL
+
+Testing Endpoints in Postman
+
+          https://documenter.getpostman.com/view/25668358/2sAXjNYB7E
+
 
 ## Jacoco Coverage
 
 ![App Screenshot](src/test/resources/jacoco_raport.PNG)
 
 ## Required files
+Files are necessary to replenish db if is empty
 
 * Travel Agencies file json with pattern:
 
@@ -33,6 +40,31 @@ The database initialization data can be retrieved from .json files
         name: "name of agency",
         "city": "city where agency is",
         "phoneNumber": "+48 123 456 789"
+* Countries file json with pattern:
+  
+      "countries": [
+      {
+      "id": 1,
+      "name": "Poland"
+      }]
+* Tours file json with pattern:
+
+      "tours": [
+      {
+      "id": 1,
+      "agencyId": 1,
+      "countryId": 1,
+      "pricePerPerson": 2500,
+      "startDate": "2024-09-01",
+      "endDate": "2024-09-10"
+      }
+## Install via Docker
+
+```bash
+      docker pull szutek90/web-app
+      docker-compose up -d --build
+```
+Test Endpoints
 
 ## Description
 

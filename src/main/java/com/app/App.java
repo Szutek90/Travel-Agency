@@ -22,11 +22,14 @@ public class App {
                 = context.getBean("reservationRouter", ReservationRouter.class);
         var tourWithCountryRouter
                 = context.getBean("tourWithCountryRouter", TourWithCountryRouter.class);
-        var travelAgencyRouter = context.getBean("travelAgencyRouter", TravelAgencyRouter.class);
+        var travelAgencyRouter = context.getBean("travelAgencyRouter",
+                TravelAgencyRouter.class);
+        var defaultRouter = context.getBean("defaultRouter", DefaultRouter.class);
         countryRouter.routes();
         personRouter.routes();
         reservationRouter.routes();
         tourWithCountryRouter.routes();
         travelAgencyRouter.routes();
+        defaultRouter.routes();
     }
 }

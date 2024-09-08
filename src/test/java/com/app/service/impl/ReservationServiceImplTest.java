@@ -37,6 +37,8 @@ class ReservationServiceImplTest {
     static Tour tour;
 
     @Mock
+    ReservationComponentRepository componentRepository;
+    @Mock
     ReservationRepository reservationRepository;
     @Mock
     TourRepository tourRepository;
@@ -66,7 +68,7 @@ class ReservationServiceImplTest {
 
     @Test
     @DisplayName("When making reservation")
-    void tes1() {
+    void test1() {
         when(tourRepository.findById(anyInt())).thenReturn(Optional.of(new Tour()));
         when(personRepository.findById(anyInt())).thenReturn(Optional.of(Person.builder()
                 .id(1)
@@ -74,7 +76,9 @@ class ReservationServiceImplTest {
                 .name("Jan")
                 .surname("kowalski")
                 .build()));
-        when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
+        when(reservationRepository.save(any(Reservation.class)))
+                .thenReturn(reservation);
+        when(componentRepository.save(any())).thenReturn(null);
         assertThatCode(() -> service.makeReservation(createReservationDto))
                 .doesNotThrowAnyException();
     }
@@ -147,5 +151,68 @@ class ReservationServiceImplTest {
         when(tourRepository.getByCountryName("Poland")).thenReturn(List.of(tour));
         assertThat(service.getToursTakingPlaceInGivenCountry(List.of("Poland", "Norway")))
                 .isEqualTo(List.of(tour));
+    }
+
+    @Test
+    @DisplayName("When getting all reservations")
+    void test10() {
+        when(reservationRepository.findAll()).thenReturn(List.of(reservation));
+        when(tourRepository.findById(anyInt())).thenReturn(Optional.of(tour));
+        when(travelAgencyRepository.findById(anyInt())).thenReturn(Optional.of(agency));
+        when(personRepository.findById(anyInt())).thenReturn(Optional.of(Person.builder()
+                .id(1)
+                .email("kowalski@wp.pl")
+                .name("Jan")
+                .surname("kowalski")
+                .build()));
+        assertThat(service.getAllReservations())
+                .isEqualTo(List.of(service.toGetReservationDto(reservation)));
+    }
+
+    @Test
+    @DisplayName("When getting all reservations makes error with tour")
+    void test11() {
+        when(reservationRepository.findAll()).thenReturn(List.of(reservation));
+        when(travelAgencyRepository.findById(anyInt())).thenReturn(Optional.of(agency));
+        assertThatThrownBy(() -> service.getAllReservations())
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("No tour with given id");
+    }
+
+    @Test
+    @DisplayName("When getting all reservations makes error with agency")
+    void test12() {
+        when(reservationRepository.findAll()).thenReturn(List.of(reservation));
+        when(tourRepository.findById(anyInt())).thenReturn(Optional.of(tour));
+        assertThatThrownBy(() -> service.getAllReservations())
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("No agency with given id");
+    }
+
+    @Test
+    @DisplayName("When getting all reservations makes error with person")
+    void test13() {
+        when(reservationRepository.findAll()).thenReturn(List.of(reservation));
+        when(tourRepository.findById(anyInt())).thenReturn(Optional.of(tour));
+        when(travelAgencyRepository.findById(anyInt())).thenReturn(Optional.of(agency));
+        assertThatThrownBy(() -> service.getAllReservations())
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("No person with given id");
+    }
+
+    @Test
+    @DisplayName("When getting agency and agency is not found")
+    void test14() {
+        when(reservationRepository.findAll()).thenReturn(List.of(reservation));
+        assertThatThrownBy(() -> service.getAgencyWithMostOrganizedTrips())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Travel Agency not found");
+    }
+
+    @Test
+    @DisplayName("When getting agencies most earned money")
+    void test15() {
+        when(reservationRepository.findAll()).thenReturn(List.of(reservation));
+        when(tourRepository.findById(anyInt())).thenReturn(Optional.of(tour));
+        assertThatThrownBy(() -> service.getAgencyEarnMostMoney())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Travel Agency not found");
     }
 }

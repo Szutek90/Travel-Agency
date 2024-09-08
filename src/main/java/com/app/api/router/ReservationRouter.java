@@ -62,13 +62,11 @@ public class ReservationRouter {
                         },
                         responseTransformer);
             });
-            path("/summary", () -> {
-                get("", (request, response) -> {
-                    response.header("Content-Type", "application/json;charset=utf-8");
-                    return new ResponseDto<>(reservationService.getSummaryByTourAvgPrice());
-                },
-                        responseTransformer);
-            });
+            path("/summary", () -> get("", (request, response) -> {
+                response.header("Content-Type", "application/json;charset=utf-8");
+                return new ResponseDto<>(reservationService.getSummaryByTourAvgPrice());
+            },
+                    responseTransformer));
         });
     }
 }

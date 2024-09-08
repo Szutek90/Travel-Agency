@@ -20,12 +20,12 @@ public class PersonServiceImpl implements PersonService {
         if (personRepository.findByEmail(personDto.email()).isPresent()) {
             throw new IllegalArgumentException("Person with given email already exist");
         }
-        var personTosave = personRepository.save(Person.builder()
+        var personToSave = personRepository.save(Person.builder()
                 .name(personDto.name())
                 .surname(personDto.surname())
                 .email(personDto.email())
                 .build());
-        return personTosave.toGetPersonDto();
+        return personToSave.toGetPersonDto();
     }
 
     @Override

@@ -9,5 +9,4 @@ public interface ReservationMapper {
     ToIntFunction<Reservation> toPersonId = r -> r.customerId;
     ToIntFunction<Reservation> toQuantityOfPeople = r -> r.quantityOfPeople;
     ToIntFunction<Reservation> toDiscount = r -> r.discount;
-//    Function<Reservation, List<ReservationComponent>> toComponents = r -> r.components;
 }

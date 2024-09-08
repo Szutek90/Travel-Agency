@@ -24,7 +24,6 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
     public T save(T item) {
         var sql = "insert into %s %s values %s"
                 .formatted(tableName(), getColumnNames(), getColumnValues(item));
-        System.out.println(sql);
         var insertedRows = jdbi.withHandle(handle -> handle.execute(sql));
         if (insertedRows == 0) {
             throw new IllegalStateException("Row not inserted");
