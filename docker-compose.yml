@@ -18,6 +18,21 @@ services:
     networks:
       - "spark_network"
 
+  mysql_test:
+    image: mysql:latest
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_1
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user1234
+      MYSQL_TCP_PORT: 3308
+    ports:
+      - "3308:3308"
+    expose:
+      - 3308
+
   web-app:
     image: szutek90/web-app:1.0
     ports:
@@ -29,5 +44,6 @@ services:
 
 volumes:
   mysql:
+  mysql_test:
 networks:
   spark_network:

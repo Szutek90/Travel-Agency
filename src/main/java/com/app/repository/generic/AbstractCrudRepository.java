@@ -121,8 +121,10 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
     @Override
     public List<T> deleteAll() {
         var itemsToDelete = findAll();
-        var sql = "delete from %S".formatted(tableName());
-        jdbi.useHandle(handle -> handle.execute(sql));
+        var sql = "delete from %s".formatted(tableName());
+        jdbi.useHandle(handle -> handle
+                .createUpdate(sql)
+                .execute());
         return itemsToDelete;
     }
 

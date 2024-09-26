@@ -2,16 +2,13 @@ package com.app.service.impl;
 
 
 import com.app.dto.country.CreateCountryDto;
-import com.app.dto.country.GetCountryDto;
 import com.app.model.country.Country;
 import com.app.repository.CountryRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;

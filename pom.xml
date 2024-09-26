@@ -36,6 +36,8 @@
         <spring.context.version>6.0.10</spring.context.version>
         <javax.annotation.api.version>1.3.2</javax.annotation.api.version>
         <spark.version>2.9.4</spark.version>
+        <mysql.testcontainers.version>1.20.0</mysql.testcontainers.version>
+        <jdbi.version>3.45.2</jdbi.version>
     </properties>
 
     <dependencyManagement>
@@ -137,6 +139,18 @@
                 <artifactId>javax.annotation-api</artifactId>
                 <version>${javax.annotation.api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>mysql</artifactId>
+                <version>${mysql.testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jdbi</groupId>
+                <artifactId>jdbi3-testcontainers</artifactId>
+                <version>${jdbi.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -203,6 +217,14 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mysql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-testcontainers</artifactId>
         </dependency>
     </dependencies>
 
