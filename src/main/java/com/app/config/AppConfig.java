@@ -101,37 +101,36 @@ public class AppConfig {
                 );
                 """;
 
-        jdbi.useHandle(handle -> {
-            handle.inTransaction(transactionHandle -> {
-                transactionHandle.execute(countrySql);
-                transactionHandle.execute(personSql);
-                transactionHandle.execute(toursSql);
-                transactionHandle.execute(reservationSql);
-                transactionHandle.execute(componentsSql);
-                return null;
-            });
-        });
+        jdbi.useHandle(handle -> handle.inTransaction(transactionHandle -> {
+            transactionHandle.execute(countrySql);
+            transactionHandle.execute(personSql);
+            transactionHandle.execute(toursSql);
+            transactionHandle.execute(reservationSql);
+            transactionHandle.execute(componentsSql);
+            return null;
+        }));
 
     }
 
     private void replenishDb(Jdbi jdbi) {
-    var dbReplenisher = new DbFiller();
-        if (dbReplenisher.getAll(jdbi, Country.class, "countries").isEmpty()) {
+    var dbReplenish = new DbFiller();
+        if (dbReplenish.getAll(jdbi, Country.class, "countries").isEmpty()) {
             var countryConverter = new CountriesGsonConverter(gson());
             var deserializer = new CountriesDeserializer(countryConverter);
             var items = deserializer.deserialize("countries.json").countries();
-            dbReplenisher.saveAll("countries", items, jdbi, Country.class);
+            dbReplenish.saveAll("countries", items, jdbi, Country.class);
         }
-        if (dbReplenisher.getAll(jdbi, Tour.class, "tours").isEmpty()) {
+        if (dbReplenish.getAll(jdbi, Tour.class, "tours").isEmpty()) {
             var toursConverter = new ToursGsonConverter(gson());
             var deserializer = new ToursDeserializer(toursConverter);
             var items = deserializer.deserialize("tours.json").tours();
-            dbReplenisher.saveAll("tours", items, jdbi, Tour.class);
+            dbReplenish.saveAll("tours", items, jdbi, Tour.class);
         }
         if (travelAgencyRepo.getAll().isEmpty()) {
             var travelAgencyConverter = new TravelAgenciesGsonConverter(gson());
             var deserializer = new TravelAgenciesDeserializer(travelAgencyConverter);
-            travelAgencyRepo.saveAll(deserializer.deserialize("agencies.json").travelAgencies());
+            travelAgencyRepo.saveAll(deserializer.deserialize(env.getRequiredProperty("agencies.file"))
+                    .travelAgencies());
         }
     }
 

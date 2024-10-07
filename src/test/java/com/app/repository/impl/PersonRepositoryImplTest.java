@@ -3,20 +3,43 @@ package com.app.repository.impl;
 import com.app.extension.DbTablesEachExtension;
 import com.app.model.person.Person;
 import com.app.repository.PersonRepository;
-import org.assertj.core.api.Assertions;
+import org.jdbi.v3.testing.junit5.JdbiExtension;
+import org.jdbi.v3.testing.junit5.tc.JdbiTestcontainersExtension;
+import org.jdbi.v3.testing.junit5.tc.TestcontainersDatabaseInformation;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
+@SuppressWarnings("resource")
 @ExtendWith(DbTablesEachExtension.class)
 @Testcontainers(disabledWithoutDocker = true)
-public class PersonRepositoryImplTest extends Base {
+class PersonRepositoryImplTest {
+    @Container
+    static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:latest")
+            .withUsername("user")
+            .withPassword("user1234")
+            .withDatabaseName("test_db")
+            .withInitScript("scripts/init.sql");
+
+    static TestcontainersDatabaseInformation mySql = TestcontainersDatabaseInformation.of(
+            mySQLContainer.getUsername(),
+            mySQLContainer.getDatabaseName(),
+            mySQLContainer.getPassword(),
+            (catalogName, schemaName) -> String.format("create database if not exists %s", catalogName)
+    );
+
+    @RegisterExtension
+    public static JdbiExtension jdbiExtension = JdbiTestcontainersExtension
+            .instance(mySql, mySQLContainer);
     static PersonRepository repository;
 
     @BeforeAll
@@ -54,7 +77,7 @@ public class PersonRepositoryImplTest extends Base {
 
     @Test
     @DisplayName("When finding by email")
-    void test3(){
+    void test3() {
         var personsToAdd = List.of(new Person(1, "Jan", "Kowalski", "jan@wp.pl"),
                 new Person(2, "Andrzej", "Kowalski", "a@wp.pl"),
                 new Person(3, "Piotr", "Kwiatkowski", "kwiatek@wp.pl"));

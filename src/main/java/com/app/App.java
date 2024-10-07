@@ -24,7 +24,7 @@ public class App {
                 = context.getBean("tourWithCountryRouter", TourWithCountryRouter.class);
         var travelAgencyRouter = context.getBean("travelAgencyRouter",
                 TravelAgencyRouter.class);
-        var defaultRouter = context.getBean("defaultRouter", DefaultRouter.class);
+        var defaultRouter = context.getBean("exceptionHandlerRouter", ExceptionHandlerRouter.class);
         countryRouter.routes();
         personRouter.routes();
         reservationRouter.routes();

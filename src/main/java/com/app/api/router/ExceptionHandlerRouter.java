@@ -12,7 +12,7 @@ import static spark.Spark.*;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class DefaultRouter {
+public class ExceptionHandlerRouter {
     private final ResponseTransformer responseTransformer;
     private final Gson gson;
 

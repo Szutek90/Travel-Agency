@@ -16,7 +16,7 @@ public class ReservationComponentRepositoryImpl extends AbstractCrudRepository<R
 
     @Override
     public List<ReservationComponent> findByReservationId(int id) {
-        var sql = "SELECT component FROM %s WHERE reservation_id=:reservation_id".formatted(tableName());
+        var sql = "SELECT * FROM %s WHERE reservation_id = :reservation_id".formatted(tableName());
         return jdbi.withHandle(handle -> handle
                 .createQuery(sql)
                 .bind("reservation_id", id)
@@ -33,5 +33,14 @@ public class ReservationComponentRepositoryImpl extends AbstractCrudRepository<R
                 .bind("component", item)
                 .execute());
         return item;
+    }
+
+    @Override
+    public List<ReservationComponent> findAll() {
+        var sql = " select * from reservation_components order by reservation_id desc ";
+        return jdbi.withHandle(handle -> handle
+                .createQuery(sql)
+                .map((rs, ctx) -> ReservationComponent.valueOf(rs.getString("component")))
+                .list());
     }
 }
