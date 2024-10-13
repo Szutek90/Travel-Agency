@@ -1,7 +1,7 @@
 package com.app.persistence.converter.impl;
 
 import com.app.model.tour.Tour;
-import com.app.model.tour.Tours;
+import com.app.persistence.model.tour.ToursData;
 import com.app.persistence.json.converter.impl.ToursGsonConverter;
 import com.app.persistence.json.deserializer.custom.LocalDateDeserializer;
 import com.google.gson.Gson;
@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-class ToursGsonConverterTest {
+class ToursDataGsonConverterTest {
     static Gson gson;
     static ToursGsonConverter converter;
     static FileReader fileReader;
@@ -34,7 +34,7 @@ class ToursGsonConverterTest {
     @Test
     @DisplayName("When converting from json")
     void test1() {
-        var expected = new Tours(List.of(Tour.builder()
+        var expected = new ToursData(List.of(Tour.builder()
                         .id(1)
                         .agencyId(1)
                         .countryId(1)
@@ -50,6 +50,6 @@ class ToursGsonConverterTest {
                         .startDate(LocalDate.of(2024, 10, 5))
                         .endDate(LocalDate.of(2024, 10, 15))
                         .build()));
-        Assertions.assertThat(converter.fromJson(fileReader, Tours.class)).isEqualTo(expected);
+        Assertions.assertThat(converter.fromJson(fileReader, ToursData.class)).isEqualTo(expected);
     }
 }

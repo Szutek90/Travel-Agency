@@ -5,5 +5,5 @@ import com.app.persistence.xml.deserializer.generic.AbstractJaxbXmlFileDeseriali
 import org.springframework.stereotype.Component;
 
 @Component
-public class CountriesXmlDeserializer extends AbstractJaxbXmlFileDeserializer<CountriesData> {
+public class CountriesDataXmlDeserializer extends AbstractJaxbXmlFileDeserializer<CountriesData> {
 }

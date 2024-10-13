@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-class TravelAgenciesJsonDeserializerTest {
+class TravelAgenciesDataJsonDeserializerTest {
     @Test
     @DisplayName("When deserializing")
     void test1(){

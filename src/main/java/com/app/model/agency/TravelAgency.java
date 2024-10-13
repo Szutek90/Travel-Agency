@@ -6,11 +6,12 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @AllArgsConstructor
+@Builder
 public class TravelAgency {
-    final Integer id;
-    final String name;
-    final String city;
-    private final String phoneNumber;
+    protected final Integer id;
+    protected final String name;
+    protected final String city;
+    protected final String phoneNumber;
 
     public GetTravelAgencyDto toGetTravelAgencyDto() {
         return new GetTravelAgencyDto(name, city, phoneNumber);

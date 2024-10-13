@@ -123,14 +123,14 @@ public class AppConfig {
         if (dbReplenish.getAll(jdbi, Tour.class, "tours").isEmpty()) {
             var toursConverter = new ToursGsonConverter(gson());
             var deserializer = new ToursJsonDeserializer(toursConverter);
-            var items = deserializer.deserialize("tours.json").tours();
+            var items = deserializer.deserialize("tours.json").getConvertedToTours();
             dbReplenish.saveAll("tours", items, jdbi, Tour.class);
         }
         if (travelAgencyRepo.getAll().isEmpty()) {
             var travelAgencyConverter = new TravelAgenciesGsonConverter(gson());
             var deserializer = new TravelAgenciesJsonDeserializer(travelAgencyConverter);
             travelAgencyRepo.saveAll(deserializer.deserialize(env.getRequiredProperty("agencies.file"))
-                    .travelAgencies());
+                    .getConvertedToTravelAgencies());
         }
     }
 

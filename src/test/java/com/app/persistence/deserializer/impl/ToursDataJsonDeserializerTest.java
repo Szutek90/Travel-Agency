@@ -1,7 +1,7 @@
 package com.app.persistence.deserializer.impl;
 
 import com.app.model.tour.Tour;
-import com.app.model.tour.Tours;
+import com.app.persistence.model.tour.ToursData;
 import com.app.persistence.json.converter.impl.ToursGsonConverter;
 import com.app.persistence.json.deserializer.custom.LocalDateDeserializer;
 import com.app.persistence.json.deserializer.impl.ToursJsonDeserializer;
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-class ToursJsonDeserializerTest {
+class ToursDataJsonDeserializerTest {
 
     @Test
     @DisplayName("When deserializing")
@@ -23,7 +23,7 @@ class ToursJsonDeserializerTest {
                 .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
                 .setPrettyPrinting().create();
         var converter = new ToursGsonConverter(gson);
-        var expected = new Tours(List.of(Tour.builder()
+        var expected = new ToursData(List.of(Tour.builder()
                         .id(1)
                         .agencyId(1)
                         .countryId(1)

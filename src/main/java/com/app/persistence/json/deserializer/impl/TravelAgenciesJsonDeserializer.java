@@ -1,14 +1,14 @@
 package com.app.persistence.json.deserializer.impl;
 
-import com.app.model.agency.TravelAgencies;
 import com.app.persistence.json.converter.JsonConverter;
 import com.app.persistence.json.deserializer.JsonDeserializer;
 import com.app.persistence.json.deserializer.generic.AbstractJsonDeserializer;
+import com.app.persistence.model.agency.TravelAgenciesData;
 
-public class TravelAgenciesJsonDeserializer extends AbstractJsonDeserializer<TravelAgencies>
-        implements JsonDeserializer<TravelAgencies> {
+public class TravelAgenciesJsonDeserializer extends AbstractJsonDeserializer<TravelAgenciesData>
+        implements JsonDeserializer<TravelAgenciesData> {
 
-    public TravelAgenciesJsonDeserializer(JsonConverter<TravelAgencies> converter) {
+    public TravelAgenciesJsonDeserializer(JsonConverter<TravelAgenciesData> converter) {
         super(converter);
     }
 }

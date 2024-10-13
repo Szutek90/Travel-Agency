@@ -2,6 +2,7 @@ package com.app.repository.impl;
 
 import com.app.extension.DbTablesEachExtension;
 import com.app.model.country.Country;
+import com.app.model.country.CountryMapper;
 import com.app.repository.CountryRepository;
 import org.jdbi.v3.testing.junit5.JdbiExtension;
 import org.jdbi.v3.testing.junit5.tc.JdbiTestcontainersExtension;
@@ -21,7 +22,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(DbTablesEachExtension.class)
 @Testcontainers(disabledWithoutDocker = true)
-class CountryRepositoryImplTest{
+class CountryRepositoryImplTest {
     @SuppressWarnings("resource")
     @Container
     static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:latest")
@@ -54,10 +55,10 @@ class CountryRepositoryImplTest{
     void test1() {
         var countryToInsert = new Country(1, "Poland");
         repository.save(countryToInsert);
-        var countryFromDb = repository.findById(countryToInsert.getId())
+        var countryFromDb = repository.findById(CountryMapper.toId.applyAsInt(countryToInsert))
                 .orElseThrow(() -> new IllegalStateException("No Country with given ID"));
         assertThat(countryFromDb).isEqualTo(countryToInsert);
-        assertThat(countryFromDb.getName()).isEqualTo("Poland");
+        assertThat(CountryMapper.toName.apply(countryFromDb)).isEqualTo("Poland");
     }
 
     @Test

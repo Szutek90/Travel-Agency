@@ -157,8 +157,10 @@ class TourWithCountryServiceImplTest {
     @DisplayName("When there is no country while creating new Tour")
     void test11() {
         when(countryRepository.findByCountry(any())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> service.createTour(new TourDto("Finland", BigDecimal.ONE,
+        assertThatThrownBy(() -> service.createTour(new TourDto("Finland",
+                BigDecimal.ONE,
                 LocalDate.of(2014, 5, 18), LocalDate.now())))
                 .isInstanceOf(IllegalArgumentException.class);
+
     }
 }

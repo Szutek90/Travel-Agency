@@ -6,15 +6,15 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.*;
 
-@Data
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "country")
 public class CountryData {
     @XmlElement
-    protected Integer id;
+    private Integer id;
     @XmlElement
-    protected String name;
+    private String name;
 
 }
