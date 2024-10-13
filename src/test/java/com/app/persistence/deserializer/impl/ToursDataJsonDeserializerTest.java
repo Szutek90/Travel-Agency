@@ -23,7 +23,7 @@ class ToursDataJsonDeserializerTest {
                 .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
                 .setPrettyPrinting().create();
         var converter = new ToursGsonConverter(gson);
-        var expected = new ToursData(List.of(Tour.builder()
+        var expected = List.of(Tour.builder()
                         .id(1)
                         .agencyId(1)
                         .countryId(1)
@@ -38,7 +38,7 @@ class ToursDataJsonDeserializerTest {
                         .pricePerPerson(BigDecimal.valueOf(3000))
                         .startDate(LocalDate.of(2024, 10, 5))
                         .endDate(LocalDate.of(2024, 10, 15))
-                        .build()));
+                        .build());
         var deserializer = new ToursJsonDeserializer(converter);
 
         Assertions.assertThat(deserializer.deserialize("src/test/resources/toursTest.json"))

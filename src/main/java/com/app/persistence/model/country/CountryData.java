@@ -1,5 +1,6 @@
 package com.app.persistence.model.country;
 
+import com.app.model.country.Country;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -17,4 +18,7 @@ public class CountryData {
     @XmlElement
     private String name;
 
+    public Country toCountry() {
+        return new Country(id, name);
+    }
 }

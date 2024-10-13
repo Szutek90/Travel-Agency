@@ -1,6 +1,6 @@
 package com.app.config;
 
-import com.app.persistence.model.country.CountryData;
+import com.app.model.country.Country;
 import com.app.model.tour.Tour;
 import com.app.persistence.json.converter.impl.CountriesGsonConverter;
 import com.app.persistence.json.converter.impl.ToursGsonConverter;
@@ -114,11 +114,11 @@ public class AppConfig {
 
     private void replenishDb(Jdbi jdbi) {
     var dbReplenish = new DbFiller();
-        if (dbReplenish.getAll(jdbi, CountryData.class, "countries").isEmpty()) {
+        if (dbReplenish.getAll(jdbi, Country.class, "countries").isEmpty()) {
             var countryConverter = new CountriesGsonConverter(gson());
             var deserializer = new CountriesJsonDeserializer(countryConverter);
-            var items = deserializer.deserialize("countries.json").getCountries();
-            dbReplenish.saveAll("countries", items, jdbi, CountryData.class);
+            var items = deserializer.deserialize("countries.json").getConvertedToCountries();
+            dbReplenish.saveAll("countries", items, jdbi, Country.class);
         }
         if (dbReplenish.getAll(jdbi, Tour.class, "tours").isEmpty()) {
             var toursConverter = new ToursGsonConverter(gson());

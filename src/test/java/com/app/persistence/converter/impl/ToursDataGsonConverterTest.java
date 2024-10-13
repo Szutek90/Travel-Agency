@@ -34,7 +34,7 @@ class ToursDataGsonConverterTest {
     @Test
     @DisplayName("When converting from json")
     void test1() {
-        var expected = new ToursData(List.of(Tour.builder()
+        var expected = List.of(Tour.builder()
                         .id(1)
                         .agencyId(1)
                         .countryId(1)
@@ -49,7 +49,7 @@ class ToursDataGsonConverterTest {
                         .pricePerPerson(BigDecimal.valueOf(3000))
                         .startDate(LocalDate.of(2024, 10, 5))
                         .endDate(LocalDate.of(2024, 10, 15))
-                        .build()));
+                        .build());
         Assertions.assertThat(converter.fromJson(fileReader, ToursData.class)).isEqualTo(expected);
     }
 }
