@@ -2,6 +2,7 @@ package com.app.persistence.converter.impl;
 
 import com.app.model.agency.TravelAgencies;
 import com.app.model.agency.TravelAgency;
+import com.app.persistence.json.converter.impl.TravelAgenciesGsonConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.assertj.core.api.Assertions;

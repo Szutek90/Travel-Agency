@@ -2,8 +2,12 @@ package com.app;
 
 import com.app.api.router.*;
 import com.app.config.AppConfig;
+import com.app.persistence.model.country.CountriesData;
+import com.app.persistence.xml.deserializer.impl.CountriesXmlDeserializer;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.nio.file.Paths;
 
 import static spark.Spark.initExceptionHandler;
 import static spark.Spark.port;
@@ -31,5 +35,10 @@ public class App {
         tourWithCountryRouter.routes();
         travelAgencyRouter.routes();
         defaultRouter.routes();
+
+//        var xmlDeserializer = new CountriesXmlDeserializer();
+//        var countries = new CountriesData(xmlDeserializer
+//                .deserializeFromFile(Paths.get("countries.xml")).getCountries());
+//        countries.getCountries().forEach(System.out::println);
     }
 }

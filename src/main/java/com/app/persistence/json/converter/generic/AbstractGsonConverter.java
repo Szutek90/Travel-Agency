@@ -1,6 +1,6 @@
-package com.app.persistence.converter.generic;
+package com.app.persistence.json.converter.generic;
 
-import com.app.persistence.converter.JsonConverter;
+import com.app.persistence.json.converter.JsonConverter;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 

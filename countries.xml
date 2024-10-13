@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<countries>
+    <country>
+        <id>1</id>
+        <name>Poland</name>
+    </country>
+    <country>
+        <id>2</id>
+        <name>Germany</name>
+    </country>
+    <country>
+        <id>3</id>
+        <name>France</name>
+    </country>
+    <country>
+        <id>4</id>
+        <name>Spain</name>
+    </country>
+    <country>
+        <id>5</id>
+        <name>Italy</name>
+    </country>
+    <country>
+        <id>6</id>
+        <name>United Kingdom</name>
+    </country>
+    <country>
+        <id>7</id>
+        <name>United States</name>
+    </country>
+    <country>
+        <id>8</id>
+        <name>Canada</name>
+    </country>
+    <country>
+        <id>9</id>
+        <name>Australia</name>
+    </country>
+</countries>

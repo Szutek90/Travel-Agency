@@ -1,4 +1,4 @@
-package com.app.persistence.converter;
+package com.app.persistence.json.converter;
 
 import java.io.FileReader;
 

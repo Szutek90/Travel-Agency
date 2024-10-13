@@ -1,15 +1,15 @@
 package com.app.config;
 
-import com.app.model.country.Country;
+import com.app.persistence.model.country.CountryData;
 import com.app.model.tour.Tour;
-import com.app.persistence.converter.impl.CountriesGsonConverter;
-import com.app.persistence.converter.impl.ToursGsonConverter;
-import com.app.persistence.converter.impl.TravelAgenciesGsonConverter;
-import com.app.persistence.deserializer.custom.LocalDateDeserializer;
-import com.app.persistence.deserializer.custom.LocalDateSerializer;
-import com.app.persistence.deserializer.impl.CountriesDeserializer;
-import com.app.persistence.deserializer.impl.ToursDeserializer;
-import com.app.persistence.deserializer.impl.TravelAgenciesDeserializer;
+import com.app.persistence.json.converter.impl.CountriesGsonConverter;
+import com.app.persistence.json.converter.impl.ToursGsonConverter;
+import com.app.persistence.json.converter.impl.TravelAgenciesGsonConverter;
+import com.app.persistence.json.deserializer.custom.LocalDateDeserializer;
+import com.app.persistence.json.deserializer.custom.LocalDateSerializer;
+import com.app.persistence.json.deserializer.impl.CountriesJsonDeserializer;
+import com.app.persistence.json.deserializer.impl.ToursJsonDeserializer;
+import com.app.persistence.json.deserializer.impl.TravelAgenciesJsonDeserializer;
 import com.app.repository.TravelAgencyRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -114,21 +114,21 @@ public class AppConfig {
 
     private void replenishDb(Jdbi jdbi) {
     var dbReplenish = new DbFiller();
-        if (dbReplenish.getAll(jdbi, Country.class, "countries").isEmpty()) {
+        if (dbReplenish.getAll(jdbi, CountryData.class, "countries").isEmpty()) {
             var countryConverter = new CountriesGsonConverter(gson());
-            var deserializer = new CountriesDeserializer(countryConverter);
-            var items = deserializer.deserialize("countries.json").countries();
-            dbReplenish.saveAll("countries", items, jdbi, Country.class);
+            var deserializer = new CountriesJsonDeserializer(countryConverter);
+            var items = deserializer.deserialize("countries.json").getCountries();
+            dbReplenish.saveAll("countries", items, jdbi, CountryData.class);
         }
         if (dbReplenish.getAll(jdbi, Tour.class, "tours").isEmpty()) {
             var toursConverter = new ToursGsonConverter(gson());
-            var deserializer = new ToursDeserializer(toursConverter);
+            var deserializer = new ToursJsonDeserializer(toursConverter);
             var items = deserializer.deserialize("tours.json").tours();
             dbReplenish.saveAll("tours", items, jdbi, Tour.class);
         }
         if (travelAgencyRepo.getAll().isEmpty()) {
             var travelAgencyConverter = new TravelAgenciesGsonConverter(gson());
-            var deserializer = new TravelAgenciesDeserializer(travelAgencyConverter);
+            var deserializer = new TravelAgenciesJsonDeserializer(travelAgencyConverter);
             travelAgencyRepo.saveAll(deserializer.deserialize(env.getRequiredProperty("agencies.file"))
                     .travelAgencies());
         }

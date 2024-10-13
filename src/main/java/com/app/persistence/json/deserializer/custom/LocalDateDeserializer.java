@@ -1,4 +1,4 @@
-package com.app.persistence.deserializer.custom;
+package com.app.persistence.json.deserializer.custom;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

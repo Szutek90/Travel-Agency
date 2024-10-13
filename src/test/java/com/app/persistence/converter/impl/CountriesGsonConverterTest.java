@@ -1,7 +1,8 @@
 package com.app.persistence.converter.impl;
 
-import com.app.model.country.Countries;
-import com.app.model.country.Country;
+import com.app.persistence.model.country.CountriesData;
+import com.app.persistence.model.country.CountryData;
+import com.app.persistence.json.converter.impl.CountriesGsonConverter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.assertj.core.api.Assertions;
@@ -28,8 +29,9 @@ class CountriesGsonConverterTest {
     @Test
     @DisplayName("When converting from json")
      void test1() {
-        var expected = new Countries(List.of(new Country(1, "Poland"),
-                new Country(2, "Australia")));
-        Assertions.assertThat(converter.fromJson(fileReader, Countries.class)).isEqualTo(expected);
+        var expected = new CountriesData(List.of(new CountryData(1, "Poland"),
+                new CountryData(2, "Australia")));
+        Assertions.assertThat(converter.fromJson(fileReader, CountriesData.class).getCountries())
+                .isEqualTo(expected.getCountries());
     }
 }

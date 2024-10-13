@@ -1,10 +1,9 @@
 package com.app.persistence.converter.impl;
 
-import com.app.model.country.Countries;
-import com.app.model.country.Country;
 import com.app.model.tour.Tour;
 import com.app.model.tour.Tours;
-import com.app.persistence.deserializer.custom.LocalDateDeserializer;
+import com.app.persistence.json.converter.impl.ToursGsonConverter;
+import com.app.persistence.json.deserializer.custom.LocalDateDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.assertj.core.api.Assertions;

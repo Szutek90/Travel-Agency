@@ -1,12 +1,10 @@
 package com.app.persistence.deserializer.impl;
 
-import com.app.model.country.Countries;
-import com.app.model.country.Country;
 import com.app.model.tour.Tour;
 import com.app.model.tour.Tours;
-import com.app.persistence.converter.impl.CountriesGsonConverter;
-import com.app.persistence.converter.impl.ToursGsonConverter;
-import com.app.persistence.deserializer.custom.LocalDateDeserializer;
+import com.app.persistence.json.converter.impl.ToursGsonConverter;
+import com.app.persistence.json.deserializer.custom.LocalDateDeserializer;
+import com.app.persistence.json.deserializer.impl.ToursJsonDeserializer;
 import com.google.gson.GsonBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-class ToursDeserializerTest {
+class ToursJsonDeserializerTest {
 
     @Test
     @DisplayName("When deserializing")
@@ -41,7 +39,7 @@ class ToursDeserializerTest {
                         .startDate(LocalDate.of(2024, 10, 5))
                         .endDate(LocalDate.of(2024, 10, 15))
                         .build()));
-        var deserializer = new ToursDeserializer(converter);
+        var deserializer = new ToursJsonDeserializer(converter);
 
         Assertions.assertThat(deserializer.deserialize("src/test/resources/toursTest.json"))
                 .isEqualTo(expected);

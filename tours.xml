@@ -1,0 +1,18 @@
+<tours>
+    <tour>
+        <id>1</id>
+        <agencyId>1</agencyId>
+        <countryId>1</countryId>
+        <pricePerPerson>2500</pricePerPerson>
+        <startDate>2024-09-01</startDate>
+        <endDate>2024-09-10</endDate>
+    </tour>
+    <tour>
+        <id>2</id>
+        <agencyId>2</agencyId>
+        <countryId>2</countryId>
+        <pricePerPerson>3000</pricePerPerson>
+        <startDate>2024-10-05</startDate>
+        <endDate>2024-10-15</endDate>
+    </tour>
+</tours>

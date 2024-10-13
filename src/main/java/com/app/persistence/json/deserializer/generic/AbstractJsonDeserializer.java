@@ -1,7 +1,7 @@
-package com.app.persistence.deserializer.generic;
+package com.app.persistence.json.deserializer.generic;
 
-import com.app.persistence.converter.JsonConverter;
-import com.app.persistence.deserializer.JsonDeserializer;
+import com.app.persistence.json.converter.JsonConverter;
+import com.app.persistence.json.deserializer.JsonDeserializer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.lang.reflect.ParameterizedType;
 
 @RequiredArgsConstructor
-public class AbstractJsonDeserializer<T> implements JsonDeserializer<T>{
+public class AbstractJsonDeserializer<T> implements JsonDeserializer<T> {
     private final Class<T> type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
             .getActualTypeArguments()[0];
     private final JsonConverter<T> converter;
