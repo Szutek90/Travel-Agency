@@ -1,19 +1,36 @@
 package com.app.repository.impl;
 
 import com.app.model.tour.Tour;
+import com.app.persistence.json.deserializer.JsonDeserializer;
+import com.app.persistence.model.tour.ToursData;
 import com.app.repository.TourRepository;
 import com.app.repository.generic.AbstractCrudRepository;
 import org.jdbi.v3.core.Jdbi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public class TourRepositoryImpl extends AbstractCrudRepository<Tour, Integer> implements TourRepository {
-    public TourRepositoryImpl(Jdbi jdbi) {
+    private final JsonDeserializer<ToursData> deserializer;
+
+    @Value("${tours.file}")
+    private String filename;
+
+    public TourRepositoryImpl(Jdbi jdbi, JsonDeserializer<ToursData> deserializer) {
         super(jdbi);
+        this.deserializer = deserializer;
+    }
+
+    @PostConstruct
+    public void init() {
+        if (findAll().isEmpty()) {
+            saveAll(deserializer.deserialize(filename).getConvertedToTours());
+        }
     }
 
     @Override

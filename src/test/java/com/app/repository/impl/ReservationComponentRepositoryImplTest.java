@@ -1,18 +1,24 @@
 package com.app.repository.impl;
 
+import com.app.config.AppTestsConfig;
 import com.app.extension.DbTablesEachExtension;
 import com.app.model.ReservationComponent;
-import com.app.model.agency.TravelAgency;
 import com.app.model.country.Country;
 import com.app.model.person.Person;
 import com.app.model.reservation.Reservation;
 import com.app.model.tour.Tour;
+import com.app.persistence.json.deserializer.JsonDeserializer;
+import com.app.persistence.model.country.CountriesData;
+import com.app.persistence.model.tour.ToursData;
 import com.app.repository.*;
+import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
@@ -23,23 +29,23 @@ import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(DbTablesEachExtension.class)
 @Testcontainers(disabledWithoutDocker = true)
+@ContextConfiguration(classes = AppTestsConfig.class)
 class ReservationComponentRepositoryImplTest extends Base {
+    @Autowired
+    private JsonDeserializer<CountriesData> countriesDeserializer;
+    @Autowired
+    private JsonDeserializer<ToursData> toursDeserializer;
+    static Jdbi jdbi = jdbiExtension.getJdbi();
     static ReservationComponentRepository componentRepository;
     static ReservationRepository reservationRepository;
-    static TourRepository tourRepository;
-    static TravelAgencyRepository travelAgencyRepository;
-    static CountryRepository countryRepository;
+    private final TourRepository tourRepository = new TourRepositoryImpl(jdbi, toursDeserializer) ;
+    private final CountryRepository countryRepository =  new CountryRepositoryImpl(jdbi, countriesDeserializer);
     static PersonRepository personRepository;
 
     @BeforeAll
     static void beforeAll() {
-        var jdbi = jdbiExtension.getJdbi();
         componentRepository = new ReservationComponentRepositoryImpl(jdbi);
         reservationRepository = new ReservationRepositoryImpl(jdbi);
-        tourRepository = new TourRepositoryImpl(jdbi);
-        travelAgencyRepository = new TravelAgencyRepositoryImpl(List
-                .of(new TravelAgency(1, "Agencja", "Warszawa", "123456789")));
-        countryRepository = new CountryRepositoryImpl(jdbi);
         personRepository = new PersonRepositoryImpl(jdbi);
         DbTablesEachExtension.setJdbi(jdbi);
     }

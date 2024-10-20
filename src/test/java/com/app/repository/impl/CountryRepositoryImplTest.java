@@ -1,8 +1,11 @@
 package com.app.repository.impl;
 
+import com.app.config.AppTestsConfig;
 import com.app.extension.DbTablesEachExtension;
 import com.app.model.country.Country;
 import com.app.model.country.CountryMapper;
+import com.app.persistence.json.deserializer.JsonDeserializer;
+import com.app.persistence.model.country.CountriesData;
 import com.app.repository.CountryRepository;
 import org.jdbi.v3.testing.junit5.JdbiExtension;
 import org.jdbi.v3.testing.junit5.tc.JdbiTestcontainersExtension;
@@ -12,6 +15,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -20,9 +25,14 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
+
 @ExtendWith(DbTablesEachExtension.class)
 @Testcontainers(disabledWithoutDocker = true)
+@ContextConfiguration(classes = AppTestsConfig.class)
 class CountryRepositoryImplTest {
+    @Autowired
+    private JsonDeserializer<CountriesData> deserializer;
+
     @SuppressWarnings("resource")
     @Container
     static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:latest")
@@ -42,11 +52,10 @@ class CountryRepositoryImplTest {
     public static JdbiExtension jdbiExtension = JdbiTestcontainersExtension
             .instance(mySql, mySQLContainer);
 
-    static CountryRepository repository;
+    private final CountryRepository repository = new CountryRepositoryImpl(jdbiExtension.getJdbi(),deserializer);
 
     @BeforeAll
     static void beforeAll() {
-        repository = new CountryRepositoryImpl(jdbiExtension.getJdbi());
         DbTablesEachExtension.setJdbi(jdbiExtension.getJdbi());
     }
 

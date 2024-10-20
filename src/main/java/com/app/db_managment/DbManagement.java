@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class DbManagment {
+public class DbManagement {
     private final Jdbi jdbi;
 
     public int createTable(String name, String pk, Map<String, String> columns) {

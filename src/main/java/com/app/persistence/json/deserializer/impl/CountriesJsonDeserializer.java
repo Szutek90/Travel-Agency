@@ -4,7 +4,9 @@ import com.app.persistence.model.country.CountriesData;
 import com.app.persistence.json.converter.JsonConverter;
 import com.app.persistence.json.deserializer.JsonDeserializer;
 import com.app.persistence.json.deserializer.generic.AbstractJsonDeserializer;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CountriesJsonDeserializer extends AbstractJsonDeserializer<CountriesData> implements JsonDeserializer<CountriesData> {
     public CountriesJsonDeserializer(JsonConverter<CountriesData> converter) {
         super(converter);

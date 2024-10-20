@@ -17,7 +17,7 @@ class TravelAgencyRepositoryImplTest {
 
     @BeforeAll
     static void beforeAll() {
-        travelAgencyRepository = new TravelAgencyRepositoryImpl(new ArrayList<>(Arrays.asList(
+        travelAgencyRepository.saveAll(new ArrayList<>(Arrays.asList(
                 new TravelAgency(1, "Agencja", "Warszawa", "123456789"),
                 new TravelAgency(2, "WroclawAgency", "Wroclaw", "987654321")
         )));
