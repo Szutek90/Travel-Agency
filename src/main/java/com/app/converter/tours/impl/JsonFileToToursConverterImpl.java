@@ -2,21 +2,20 @@ package com.app.converter.tours.impl;
 
 import com.app.converter.tours.FileToToursConverter;
 import com.app.model.tour.Tour;
+import com.app.persistence.json.deserializer.JsonDeserializer;
 import com.app.persistence.model.tour.ToursData;
-import com.app.persistence.xml.deserializer.XmlFileDeserializer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Paths;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class XmlFileToToursConverter implements FileToToursConverter {
-    private final XmlFileDeserializer<ToursData> deserializer;
+public class JsonFileToToursConverterImpl implements FileToToursConverter {
+    private final JsonDeserializer<ToursData> deserializer;
 
     @Override
     public List<Tour> convert(String filename) {
-        return deserializer.deserializeFromFile(Paths.get(filename)).getConvertedToTours();
+        return deserializer.deserialize(filename).getConvertedToTours();
     }
 }

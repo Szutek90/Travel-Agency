@@ -1,9 +1,9 @@
 package com.app.config;
 
 import com.app.converter.countries.FileToCountriesConverter;
-import com.app.converter.countries.impl.JsonFileToCountriesConverter;
+import com.app.converter.countries.impl.JsonFileToCountriesConverterImpl;
 import com.app.converter.tours.FileToToursConverter;
-import com.app.converter.tours.impl.JsonFileToToursConverter;
+import com.app.converter.tours.impl.JsonFileToToursConverterImpl;
 import com.app.persistence.json.converter.JsonConverter;
 import com.app.persistence.json.converter.impl.CountriesGsonConverter;
 import com.app.persistence.json.converter.impl.ToursGsonConverter;
@@ -51,12 +51,12 @@ public class AppTestsConfig {
 
     @Bean
     public FileToToursConverter fileToToursConverter() {
-        return new JsonFileToToursConverter(toursDeserializer());
+        return new JsonFileToToursConverterImpl(toursDeserializer());
     }
 
     @Bean
     public FileToCountriesConverter fileToCountriesConverter(){
-        return new JsonFileToCountriesConverter(countriesDataJsonDeserializer());
+        return new JsonFileToCountriesConverterImpl(countriesDataJsonDeserializer());
     }
 
 }

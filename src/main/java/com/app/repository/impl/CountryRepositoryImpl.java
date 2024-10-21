@@ -30,7 +30,7 @@ public class CountryRepositoryImpl extends AbstractCrudRepository<Country, Integ
 
     @PostConstruct
     public void init() {
-        var converter = context.getBean("%sFileToCountriesConverter".formatted(format)
+        var converter = context.getBean("%sFileToCountriesConverterImpl".formatted(format)
                 , FileToCountriesConverter.class);
         if (findAll().isEmpty()) {
             saveAll(converter.convert(filename));

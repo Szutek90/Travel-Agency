@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class XmlFileToCountriesConverter implements FileToCountriesConverter {
+public class XmlFileToCountriesConverterImpl implements FileToCountriesConverter {
     private final XmlFileDeserializer<CountriesData> deserializer;
 
     @Override

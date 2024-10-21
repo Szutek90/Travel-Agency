@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class JsonFileToCountriesConverter implements FileToCountriesConverter {
+public class JsonFileToCountriesConverterImpl implements FileToCountriesConverter {
     private final JsonDeserializer<CountriesData> deserializer;
 
     @Override

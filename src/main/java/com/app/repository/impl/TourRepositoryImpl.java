@@ -31,7 +31,7 @@ public class TourRepositoryImpl extends AbstractCrudRepository<Tour, Integer> im
 
     @PostConstruct
     public void init() {
-        var converter = context.getBean("%sFileToToursConverter".formatted(format),
+        var converter = context.getBean("%sFileToToursConverterImpl".formatted(format),
                 FileToToursConverter.class);
         if (findAll().isEmpty()) {
             saveAll(converter.convert(filename));

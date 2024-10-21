@@ -29,7 +29,7 @@ public class TravelAgencyRepositoryImpl implements TravelAgencyRepository {
 
     @PostConstruct
     public void init() {
-        var converter = context.getBean("%sFileToAgenciesConverter".formatted(format),
+        var converter = context.getBean("%sFileToAgenciesConverterImpl".formatted(format),
                 FileToAgenciesConverter.class);
         if (travelAgencies.isEmpty()) {
             travelAgencies.addAll(converter.convert(filename));
