@@ -19,7 +19,10 @@ services:
       - "spark_network"
 
   web-app:
-    image: szutek90/web-app:1.0
+    image: szutek90/web-app:1.1
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     restart: always

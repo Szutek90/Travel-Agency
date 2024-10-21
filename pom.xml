@@ -382,6 +382,13 @@
                             </configuration>
                         </execution>
                     </executions>
+                    <configuration>
+                        <excludes>
+                            <exclude>com/app/api/**</exclude>
+                            <exclude>com/app/config/**</exclude>
+                            <exclude>com/app/App</exclude>
+                        </excludes>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

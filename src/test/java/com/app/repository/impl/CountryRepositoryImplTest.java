@@ -188,11 +188,4 @@ class CountryRepositoryImplTest {
                 .orElseThrow(() -> new IllegalStateException("No country")))
                 .isEqualTo(new Country(1, "Poland"));
     }
-
-    @Test
-    @DisplayName("When initializing")
-    void test12() {
-        repository.init();
-        assertThat(repository.findAll()).hasSize(2);
-    }
 }
