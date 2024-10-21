@@ -1,7 +1,6 @@
 package com.app.repository.impl;
 
 import com.app.model.agency.TravelAgency;
-import com.app.repository.TravelAgencyRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +12,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 class TravelAgencyRepositoryImplTest {
-    static TravelAgencyRepository travelAgencyRepository;
+    static TravelAgencyRepositoryImpl repository = new TravelAgencyRepositoryImpl(null);
 
     @BeforeAll
     static void beforeAll() {
-        travelAgencyRepository.saveAll(new ArrayList<>(Arrays.asList(
+        repository.saveAll(new ArrayList<>(Arrays.asList(
                 new TravelAgency(1, "Agencja", "Warszawa", "123456789"),
                 new TravelAgency(2, "WroclawAgency", "Wroclaw", "987654321")
         )));
@@ -27,7 +26,7 @@ class TravelAgencyRepositoryImplTest {
     @DisplayName("When finding by id")
     void test1() {
         var expected = new TravelAgency(1, "Agencja", "Warszawa", "123456789");
-        assertThat(travelAgencyRepository.findById(1)
+        assertThat(repository.findById(1)
                 .orElseThrow(() -> new IllegalStateException("No agency with given id")))
                 .isEqualTo(expected);
     }
@@ -36,7 +35,7 @@ class TravelAgencyRepositoryImplTest {
     @DisplayName("When finding by agency name")
     void test2() {
         var expected = new TravelAgency(2, "WroclawAgency", "Wroclaw", "987654321");
-        assertThat(travelAgencyRepository.findByName("WroclawAgency")
+        assertThat(repository.findByName("WroclawAgency")
                 .orElseThrow(() -> new IllegalStateException("No agency with given name")))
                 .isEqualTo(expected);
     }
@@ -45,7 +44,7 @@ class TravelAgencyRepositoryImplTest {
     @DisplayName("When finding by city")
     void test3() {
         var expected = new TravelAgency(2, "WroclawAgency", "Wroclaw", "987654321");
-        assertThat(travelAgencyRepository.findByCity("Wroclaw"))
+        assertThat(repository.findByCity("Wroclaw"))
                 .isEqualTo(List.of(expected));
     }
 
@@ -55,7 +54,7 @@ class TravelAgencyRepositoryImplTest {
         var expected = List
                 .of(new TravelAgency(1, "Agencja", "Warszawa", "123456789"),
                         new TravelAgency(2, "WroclawAgency", "Wroclaw", "987654321"));
-        assertThat(travelAgencyRepository.getAll()).isEqualTo(expected);
+        assertThat(repository.getAll()).isEqualTo(expected);
     }
 
     @Test
@@ -66,10 +65,10 @@ class TravelAgencyRepositoryImplTest {
                         new TravelAgency(2, "WroclawAgency", "Wroclaw", "987654321"),
                         new TravelAgency(3, "X", "Bialystok", "321"));
         var agencyToSave = new TravelAgency(3, "X", "Bialystok", "321");
-        System.out.println(travelAgencyRepository.getAll());
-        assertThatCode(() -> travelAgencyRepository.save(agencyToSave))
+        System.out.println(repository.getAll());
+        assertThatCode(() -> repository.save(agencyToSave))
                 .doesNotThrowAnyException();
-        assertThat(travelAgencyRepository.getAll()).isEqualTo(expected);
+        assertThat(repository.getAll()).isEqualTo(expected);
     }
 
     @Test
@@ -77,9 +76,9 @@ class TravelAgencyRepositoryImplTest {
     void test6() {
         var expected = List
                 .of(new TravelAgency(3, "X", "Bialystok", "321"));
-        assertThatCode(() -> travelAgencyRepository.delete(1)).doesNotThrowAnyException();
-        assertThatCode(() -> travelAgencyRepository.delete(2)).doesNotThrowAnyException();
-        assertThat(travelAgencyRepository.getAll()).isEqualTo(expected);
+        assertThatCode(() -> repository.delete(1)).doesNotThrowAnyException();
+        assertThatCode(() -> repository.delete(2)).doesNotThrowAnyException();
+        assertThat(repository.getAll()).isEqualTo(expected);
     }
 
     @Test
@@ -92,8 +91,8 @@ class TravelAgencyRepositoryImplTest {
         var agenciesToSave = List
                 .of(new TravelAgency(1, "Agencja", "Warszawa", "123456789"),
                         new TravelAgency(2, "WroclawAgency", "Wroclaw", "987654321"));
-        assertThatCode(() -> travelAgencyRepository.saveAll(agenciesToSave))
+        assertThatCode(() -> repository.saveAll(agenciesToSave))
                 .doesNotThrowAnyException();
-        assertThat(travelAgencyRepository.getAll()).containsExactlyInAnyOrderElementsOf(expected);
+        assertThat(repository.getAll()).containsExactlyInAnyOrderElementsOf(expected);
     }
 }

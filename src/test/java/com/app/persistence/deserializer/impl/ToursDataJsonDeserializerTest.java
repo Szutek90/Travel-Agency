@@ -1,7 +1,6 @@
 package com.app.persistence.deserializer.impl;
 
 import com.app.model.tour.Tour;
-import com.app.persistence.model.tour.ToursData;
 import com.app.persistence.json.converter.impl.ToursGsonConverter;
 import com.app.persistence.json.deserializer.custom.LocalDateDeserializer;
 import com.app.persistence.json.deserializer.impl.ToursJsonDeserializer;
@@ -41,7 +40,7 @@ class ToursDataJsonDeserializerTest {
                         .build());
         var deserializer = new ToursJsonDeserializer(converter);
 
-        Assertions.assertThat(deserializer.deserialize("src/test/resources/toursTest.json"))
-                .isEqualTo(expected);
+        Assertions.assertThat(deserializer.deserialize("src/test/resources/toursTest.json")
+                        .getConvertedToTours()).isEqualTo(expected);
     }
 }

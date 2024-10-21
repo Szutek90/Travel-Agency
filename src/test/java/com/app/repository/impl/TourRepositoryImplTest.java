@@ -1,14 +1,11 @@
 package com.app.repository.impl;
 
 import com.app.config.AppTestsConfig;
+import com.app.converter.countries.FileToCountriesConverter;
+import com.app.converter.tours.FileToToursConverter;
 import com.app.extension.DbTablesEachExtension;
 import com.app.model.country.Country;
 import com.app.model.tour.Tour;
-import com.app.persistence.json.deserializer.JsonDeserializer;
-import com.app.persistence.model.country.CountriesData;
-import com.app.persistence.model.tour.ToursData;
-import com.app.repository.CountryRepository;
-import com.app.repository.TourRepository;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.testing.junit5.JdbiExtension;
 import org.jdbi.v3.testing.junit5.tc.JdbiTestcontainersExtension;
@@ -19,7 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -30,15 +27,27 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(DbTablesEachExtension.class)
 @Testcontainers(disabledWithoutDocker = true)
 @ContextConfiguration(classes = AppTestsConfig.class)
 class TourRepositoryImplTest {
-    @Autowired
-    private JsonDeserializer<CountriesData> countriesDeserializer;
-    @Autowired
-    private JsonDeserializer<ToursData> toursDeserializer;
+    static Jdbi jdbi;
+    private static TourRepositoryImpl tourRepository;
+    private static CountryRepositoryImpl countryRepository;
+
+    static List<Tour> tours = List.of(new Tour(1, 1, 1, new BigDecimal("10.00"),
+                    LocalDate.of(2024, 5, 19),
+                    LocalDate.of(2024, 5, 30)),
+            new Tour(2, 1, 1, new BigDecimal("35.00"),
+                    LocalDate.of(2024, 10, 24),
+                    LocalDate.of(2024, 11, 1)));
+
+    static List<Country> countries = List.of(Country.builder().name("Poland").id(1).build(),
+            Country.builder().name("Australia").id(2).build());
+
     @SuppressWarnings("resource")
     @Container
     static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:latest")
@@ -57,26 +66,33 @@ class TourRepositoryImplTest {
     @RegisterExtension
     public static JdbiExtension jdbiExtension = JdbiTestcontainersExtension
             .instance(mySql, mySQLContainer);
-    static Jdbi jdbi = jdbiExtension.getJdbi();
-    private final TourRepository tourRepository = new TourRepositoryImpl(jdbi, toursDeserializer);
-    private final CountryRepository countryRepository = new CountryRepositoryImpl(jdbi, countriesDeserializer);
-    static List<Tour> tours = List.of(new Tour(1, 1, 1, new BigDecimal("10.00"),
-                    LocalDate.of(2024, 5, 19),
-                    LocalDate.of(2024, 5, 30)),
-            new Tour(2, 1, 1, new BigDecimal("35.00"),
-                    LocalDate.of(2024, 10, 24),
-                    LocalDate.of(2024, 11, 1)));
+
 
     @BeforeAll
     static void beforeAll() {
+        jdbi = jdbiExtension.getJdbi();
+        var tourFilename = "toursTest.json";
+        var countryFilename = "countriesTest.json";
+        var format = "json";
+        var contextMockito = mock(ApplicationContext.class);
+        var tourConverter = mock(FileToToursConverter.class);
+        var countryConverter = mock(FileToCountriesConverter.class);
+        when(contextMockito.getBean("%sFileToToursConverter".formatted(format),
+                FileToToursConverter.class)).thenReturn(tourConverter);
+        when(contextMockito.getBean("%sFileToCountriesConverter".formatted(format),
+                FileToCountriesConverter.class)).thenReturn(countryConverter);
+        tourRepository = new TourRepositoryImpl(jdbi, contextMockito);
+        countryRepository = new CountryRepositoryImpl(jdbi, contextMockito);
+        tourRepository.filename = tourFilename;
+        countryRepository.filename = countryFilename;
+        tourRepository.format = format;
+        countryRepository.format = format;
         DbTablesEachExtension.setJdbi(jdbi);
-
     }
 
     @BeforeEach
     void beforeEach() {
-        var country = new Country(1, "Poland");
-        countryRepository.save(country);
+        countryRepository.saveAll(countries);
         tourRepository.saveAll(tours);
     }
 

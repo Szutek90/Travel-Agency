@@ -29,9 +29,10 @@ class TravelAgenciesDataGsonConverterTest {
     @Test
     @DisplayName("When converting from json")
     void test1(){
-        var expected = new TravelAgenciesData(List.of(
+        var expected = List.of(
                 new TravelAgencyData(1,"Sunshine Travels", "Warszawa", "+48 123 456 789"),
-                new TravelAgencyData(2,"Adventure Seekers", "Kraków", "+48 987 654 321")));
-        Assertions.assertThat(converter.fromJson(fileReader, TravelAgenciesData.class)).isEqualTo(expected);
+                new TravelAgencyData(2,"Adventure Seekers", "Kraków", "+48 987 654 321"));
+        Assertions.assertThat(converter.fromJson(fileReader, TravelAgenciesData.class)
+                .getTravelAgencies()).isEqualTo(expected);
     }
 }

@@ -1,12 +1,12 @@
 package com.app.repository.impl;
 
+import com.app.converter.agencies.FileToAgenciesConverter;
 import com.app.model.agency.TravelAgency;
 import com.app.model.agency.TravelAgencyMapper;
-import com.app.persistence.json.deserializer.JsonDeserializer;
-import com.app.persistence.model.agency.TravelAgenciesData;
 import com.app.repository.TravelAgencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -19,15 +19,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TravelAgencyRepositoryImpl implements TravelAgencyRepository {
     private final List<TravelAgency> travelAgencies = new ArrayList<>();
-    private final JsonDeserializer<TravelAgenciesData> deserializer;
+    private final ApplicationContext context;
 
     @Value("${agencies.file}")
     private String filename;
 
+    @Value("${agencies.format}")
+    private String format;
+
     @PostConstruct
     public void init() {
-        if(travelAgencies.isEmpty()){
-            travelAgencies.addAll(deserializer.deserialize(filename).getConvertedToTravelAgencies());
+        var converter = context.getBean("%sFileToAgenciesConverter".formatted(format),
+                FileToAgenciesConverter.class);
+        if (travelAgencies.isEmpty()) {
+            travelAgencies.addAll(converter.convert(filename));
         }
     }
 

@@ -1,12 +1,10 @@
 package com.app.repository.impl;
 
 import com.app.config.AppTestsConfig;
+import com.app.converter.countries.FileToCountriesConverter;
 import com.app.extension.DbTablesEachExtension;
 import com.app.model.country.Country;
 import com.app.model.country.CountryMapper;
-import com.app.persistence.json.deserializer.JsonDeserializer;
-import com.app.persistence.model.country.CountriesData;
-import com.app.repository.CountryRepository;
 import org.jdbi.v3.testing.junit5.JdbiExtension;
 import org.jdbi.v3.testing.junit5.tc.JdbiTestcontainersExtension;
 import org.jdbi.v3.testing.junit5.tc.TestcontainersDatabaseInformation;
@@ -15,7 +13,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -24,15 +26,15 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 
-@ExtendWith(DbTablesEachExtension.class)
+@ExtendWith({DbTablesEachExtension.class, MockitoExtension.class})
 @Testcontainers(disabledWithoutDocker = true)
 @ContextConfiguration(classes = AppTestsConfig.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class CountryRepositoryImplTest {
-    @Autowired
-    private JsonDeserializer<CountriesData> deserializer;
-
+    private static CountryRepositoryImpl repository;
     @SuppressWarnings("resource")
     @Container
     static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:latest")
@@ -52,21 +54,31 @@ class CountryRepositoryImplTest {
     public static JdbiExtension jdbiExtension = JdbiTestcontainersExtension
             .instance(mySql, mySQLContainer);
 
-    private final CountryRepository repository = new CountryRepositoryImpl(jdbiExtension.getJdbi(),deserializer);
-
     @BeforeAll
     static void beforeAll() {
         DbTablesEachExtension.setJdbi(jdbiExtension.getJdbi());
+        var countries = List.of(Country.builder().name("Poland").id(1).build(),
+                Country.builder().name("Australia").id(2).build());
+        var filename = "countriesTest.json";
+        var format = "json";
+        var context = Mockito.mock(ApplicationContext.class);
+        var mockConverter = Mockito.mock(FileToCountriesConverter.class);
+        when(context.getBean("%sFileToCountriesConverter".formatted(format),
+                FileToCountriesConverter.class)).thenReturn(mockConverter);
+        when(mockConverter.convert(filename)).thenReturn(countries);
+        repository = new CountryRepositoryImpl(jdbiExtension.getJdbi(), context);
+        repository.filename = filename;
+        repository.format = format;
     }
 
     @Test
     @DisplayName("When adding country")
     void test1() {
-        var countryToInsert = new Country(1, "Poland");
-        repository.save(countryToInsert);
-        var countryFromDb = repository.findById(CountryMapper.toId.applyAsInt(countryToInsert))
+        var expected = new Country(1, "Poland");
+        repository.save(expected);
+        var countryFromDb = repository.findById(CountryMapper.toId.applyAsInt(expected))
                 .orElseThrow(() -> new IllegalStateException("No Country with given ID"));
-        assertThat(countryFromDb).isEqualTo(countryToInsert);
+        assertThat(countryFromDb).isEqualTo(expected);
         assertThat(CountryMapper.toName.apply(countryFromDb)).isEqualTo("Poland");
     }
 
@@ -175,5 +187,12 @@ class CountryRepositoryImplTest {
         assertThat(repository.findByCountry("Poland")
                 .orElseThrow(() -> new IllegalStateException("No country")))
                 .isEqualTo(new Country(1, "Poland"));
+    }
+
+    @Test
+    @DisplayName("When initializing")
+    void test12() {
+        repository.init();
+        assertThat(repository.findAll()).hasSize(2);
     }
 }

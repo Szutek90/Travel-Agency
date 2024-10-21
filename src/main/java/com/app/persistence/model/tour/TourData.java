@@ -4,12 +4,14 @@ import com.app.model.tour.Tour;
 import com.app.persistence.xml.adapter.LocalDateAdapter;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @ToString
+@EqualsAndHashCode
 public class TourData {
     @XmlElement
     protected Integer id;

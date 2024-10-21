@@ -2,16 +2,8 @@ package com.app;
 
 import com.app.api.router.*;
 import com.app.config.AppConfig;
-import com.app.persistence.model.agency.TravelAgenciesData;
-import com.app.persistence.model.country.CountriesData;
-import com.app.persistence.model.tour.ToursData;
-import com.app.persistence.xml.deserializer.impl.CountriesDataXmlDeserializer;
-import com.app.persistence.xml.deserializer.impl.ToursDataXmlDeserializer;
-import com.app.persistence.xml.deserializer.impl.TravelAgenciesDataXmlDeserializerImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.nio.file.Paths;
 
 import static spark.Spark.initExceptionHandler;
 import static spark.Spark.port;
@@ -39,20 +31,5 @@ public class App {
         tourWithCountryRouter.routes();
         travelAgencyRouter.routes();
         defaultRouter.routes();
-
-//        var countriesXmlDeserializer = new CountriesDataXmlDeserializer();
-//        var agenciesXmlDeserializer = new TravelAgenciesDataXmlDeserializerImpl();
-//        var toursXmlDeserializer = new ToursDataXmlDeserializer();
-//
-//        var countries = new CountriesData(countriesXmlDeserializer
-//                .deserializeFromFile(Paths.get("countries.xml")).getCountries());
-//        var agencies = new TravelAgenciesData(agenciesXmlDeserializer
-//                .deserializeFromFile(Paths.get("agencies.xml")).getTravelAgencies());
-//        var tours = new ToursData(toursXmlDeserializer.deserializeFromFile(Paths.get("tours.xml"))
-//                .getTours());
-//
-//        countries.getCountries().forEach(System.out::println);
-//        agencies.getTravelAgencies().forEach(System.out::println);
-//        tours.getTours().forEach(System.out::println);
     }
 }

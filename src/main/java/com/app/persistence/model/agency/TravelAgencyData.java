@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -14,6 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "travelAgency")
+@EqualsAndHashCode
 public class TravelAgencyData {
     @XmlElement
     private Integer id;

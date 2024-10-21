@@ -12,6 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "country")
+@EqualsAndHashCode
 public class CountryData {
     @XmlElement
     private Integer id;

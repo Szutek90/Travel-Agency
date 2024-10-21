@@ -29,9 +29,9 @@ class CountriesGsonConverterTest {
     @Test
     @DisplayName("When converting from json")
      void test1() {
-        var expected = new CountriesData(List.of(new CountryData(1, "Poland"),
-                new CountryData(2, "Australia")));
+        var expected = List.of(new CountryData(1, "Poland"),
+                new CountryData(2, "Australia"));
         Assertions.assertThat(converter.fromJson(fileReader, CountriesData.class).getCountries())
-                .isEqualTo(expected.getCountries());
+                .containsExactlyElementsOf(expected);
     }
 }

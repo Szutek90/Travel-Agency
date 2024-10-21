@@ -50,6 +50,7 @@ class ToursDataGsonConverterTest {
                         .startDate(LocalDate.of(2024, 10, 5))
                         .endDate(LocalDate.of(2024, 10, 15))
                         .build());
-        Assertions.assertThat(converter.fromJson(fileReader, ToursData.class)).isEqualTo(expected);
+        Assertions.assertThat(converter.fromJson(fileReader, ToursData.class).getConvertedToTours())
+                .isEqualTo(expected);
     }
 }
